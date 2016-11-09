@@ -10,6 +10,34 @@
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
+body {
+  &:not(.adminimal-theme) {
+    .modal-content {
+      @import "items/checkbox";
+    }
+  }
+
+  &.adminimal-theme {
+    .modal-content {
+      @include vendor-prefixes(box-sizing, 'border-box !important', webkit, moz);
+
+      a.tabledrag-handle {
+        .handle {
+          width: 22px;
+          height: 22px;
+        }
+      }
+      [name=op] {
+        padding: 0 !important;
+        vertical-align: top;
+      }
+      table.form-item {
+        padding: 0;
+      }
+    }
+  }
+}
+
 .modal-content {
   width: 100% !important;
   padding: 1em !important;
@@ -253,6 +281,5 @@
   @import "items/text_format";
   @import "items/collection";
   @import "items/link_field";
-  @import "items/checkbox";
   @import "items/image";
 }

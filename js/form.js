@@ -5,13 +5,15 @@
     attach: function(context) {
       var $context = $(context);
 
-      // Process all [type=checkbox] and [type=radio] fields.
-      $context.find('.form-type-checkbox, .form-type-radio').once(moduleName, function() {
-        var $checkbox = $(this).children('input');
-        var input = $checkbox[0];
+      if (!$('body').hasClass('adminimal-theme')) {
+        // Process all [type=checkbox] and [type=radio] fields.
+        $context.find('.form-type-checkbox, .form-type-radio').once(moduleName, function() {
+          var $checkbox = $(this).children('input');
+          var input = $checkbox[0];
 
-        $checkbox.after('<label class="pseudo-box ' + input.type + '" for="' + input.id + '"></label>');
-      });
+          $checkbox.after('<label class="pseudo-box ' + input.type + '" for="' + input.id + '"></label>');
+        });
+      }
 
       // Process all [type=file] fields.
       $context.find('.form-type-managed-file').once(moduleName, function() {
