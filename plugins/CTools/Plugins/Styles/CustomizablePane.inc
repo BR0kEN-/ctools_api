@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Customize pane markup and attributes.
- */
 
 namespace CTools\Plugins\Styles;
 

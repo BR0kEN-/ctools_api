@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * CTools Plugin Interface.
- */
 
 namespace CTools\Plugins;
 

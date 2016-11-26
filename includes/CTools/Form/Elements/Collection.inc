@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * CTools Plugins Content Types Collection Element.
- */
 
 namespace CTools\Form\Elements;
 

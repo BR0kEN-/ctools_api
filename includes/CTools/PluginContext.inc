@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Context wrapper.
- */
 
 namespace CTools;
 
@@ -14,10 +10,14 @@ namespace CTools;
 class PluginContext {
 
   /**
+   * Context info.
+   *
    * @var \stdClass
    */
   private $info;
   /**
+   * Context data.
+   *
    * @var mixed
    */
   private $data;

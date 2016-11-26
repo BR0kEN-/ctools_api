@@ -1,13 +1,18 @@
-(function($, moduleName) {
+/**
+ * @file
+ * Form elements beautifier.
+ */
+
+(function ($, moduleName) {
   'use strict';
 
   Drupal.behaviors[moduleName] = {
-    attach: function(context) {
+    attach: function (context) {
       var $context = $(context);
 
       if (!$('body').hasClass('adminimal-theme')) {
         // Process all [type=checkbox] and [type=radio] fields.
-        $context.find('.form-type-checkbox, .form-type-radio').once(moduleName, function() {
+        $context.find('.form-type-checkbox, .form-type-radio').once(moduleName, function () {
           var $checkbox = $(this).children('input');
           var input = $checkbox[0];
 
@@ -16,15 +21,15 @@
       }
 
       // Process all [type=file] fields.
-      $context.find('.form-type-managed-file').once(moduleName, function() {
+      $context.find('.form-type-managed-file').once(moduleName, function () {
         var $container = $(this);
 
-        $container.find('[type=file]').css({position: 'fixed', top: '-100px'}).each(function() {
-          var $filed = $(this).bind('change', function() {
+        $container.find('[type=file]').css({position: 'fixed', top: '-100px'}).each(function () {
+          var $filed = $(this).bind('change', function () {
             $wrapper.text(this.value.replace(/.*\\(.*)$/g, '$1')).toggleClass('focus');
           });
 
-          var $wrapper = $('<div class="pseudo-file" />').width($filed.width()).bind('click', function() {
+          var $wrapper = $('<div class="pseudo-file" />').width($filed.width()).bind('click', function () {
             $filed.click();
             $(this).toggleClass('focus');
           });
@@ -36,17 +41,17 @@
       });
 
       // Handler for "horizontal_tabs" type.
-      $context.find('.horizontal-tabs').once(moduleName, function() {
+      $context.find('.horizontal-tabs').once(moduleName, function () {
         var $tabs = $('<ul class="clearfix" />');
         var $fieldsets = $(this).children('fieldset');
         var hash = location.hash.substr(1).split(':');
         var $firstTab = [];
 
-        $fieldsets.each(function() {
+        $fieldsets.each(function () {
           var $fieldset = $(this);
           var containerId = this.parentNode.id;
 
-          $tabs.append($('<li class="' + this.id + '">' + $fieldset.children('legend').text() + '</li>').bind('click', function() {
+          $tabs.append($('<li class="' + this.id + '">' + $fieldset.children('legend').text() + '</li>').bind('click', function () {
             var $tab = $(this);
 
             $fieldsets.add($tab.siblings()).removeClass('active');

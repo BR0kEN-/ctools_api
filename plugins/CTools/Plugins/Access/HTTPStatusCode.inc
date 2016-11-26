@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Provide an access restriction based on HTTP status codes, handled by Drupal.
- */
 
 namespace CTools\Plugins\Access;
 

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Interface for plugins that can have a contexts.
- */
 
 namespace CTools\Plugins;
 

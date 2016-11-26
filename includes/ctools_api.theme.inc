@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Alterations of theme.
@@ -7,15 +8,15 @@
 /**
  * Override of theme_panels_flexible().
  *
- * @internal
- *
- * @see theme_panels_flexible()
- *
  * @param array $variables
  *   An array of variables to preprocess.
  *
  * @return string
  *   HTML markup.
+ *
+ * @see theme_panels_flexible()
+ *
+ * @internal
  */
 function ctools_api_panels_flexible(array $variables) {
   panels_flexible_convert_settings($variables['settings'], $variables['layout']);
@@ -37,10 +38,6 @@ function ctools_api_panels_flexible(array $variables) {
 /**
  * Render a piece of a flexible layout.
  *
- * @internal
- *
- * @see panels_flexible_render_items()
- *
  * @param \stdClass $renderer
  *   Layout configuration.
  * @param array $regions
@@ -48,6 +45,10 @@ function ctools_api_panels_flexible(array $variables) {
  *
  * @return string
  *   HTML markup.
+ *
+ * @see panels_flexible_render_items()
+ *
+ * @internal
  */
 function _ctools_api_panels_flexible_render_items(\stdClass $renderer, array $regions) {
   $groups = [

@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Customize region markup and attributes.
- */
 
 namespace CTools\Plugins\Styles;
 

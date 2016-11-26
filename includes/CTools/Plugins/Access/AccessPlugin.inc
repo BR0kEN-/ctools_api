@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Base access plugin.
- */
 
 namespace CTools\Plugins\Access;
 

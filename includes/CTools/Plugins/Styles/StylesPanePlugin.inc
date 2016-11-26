@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Base style plugin for pane.
- */
 
 namespace CTools\Plugins\Styles;
 

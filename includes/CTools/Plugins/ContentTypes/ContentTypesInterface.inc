@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * CTools Plugins Content Types Interface.
- */
 
 namespace CTools\Plugins\ContentTypes;
 

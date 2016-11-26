@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contexts collection.
- */
 
 namespace CTools;
 
@@ -14,10 +10,14 @@ namespace CTools;
 class PluginContexts {
 
   /**
+   * List of contexts.
+   *
    * @var PluginContext[]
    */
   private $contexts = [];
   /**
+   * Raw argument from "ctools" module.
+   *
    * @var null|\ctools_context|\ctools_context[]
    */
   private $rawArgument;

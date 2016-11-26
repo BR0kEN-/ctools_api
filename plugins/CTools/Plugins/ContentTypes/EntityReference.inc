@@ -1,13 +1,9 @@
 <?php
-/**
- * @file
- * Entity Reference CTools content type.
- */
 
 namespace CTools\Plugins\ContentTypes;
 
 use CTools\PluginContexts;
-use CTools\Form\Elements;
+use CTools\Form\Elements\Collection;
 
 /**
  * Class EntityReference.
@@ -95,12 +91,12 @@ class EntityReference extends ContentTypesPlugin {
    *
    * {@inheritdoc}
    *
-   * @see \CTools\Form\Elements\Collection
+   * @see Collection
    */
   protected static function entityReferenceCollection(array $parents, array &$form, array &$form_state, array $conf) {
     self::initFormState($form_state);
 
-    new Elements\Collection($parents, $form, $form_state, $conf, function ($i, $data) use ($form_state) {
+    new Collection($parents, $form, $form_state, $conf, function ($i, $data) use ($form_state) {
       return self::referenceItem($form_state, $data);
     });
   }
@@ -110,7 +106,7 @@ class EntityReference extends ContentTypesPlugin {
    *
    * {@inheritdoc}
    *
-   * @see \CTools\Form\Elements\Collection
+   * @see Collection
    */
   protected static function entityReferenceElement(array $parents, array &$form, array &$form_state, array $conf) {
     self::initFormState($form_state);

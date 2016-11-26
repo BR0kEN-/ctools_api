@@ -1,10 +1,8 @@
 <?php
-/**
- * @file
- * Plugin Constructor.
- */
 
 namespace CTools;
+
+use CTools\Plugins\TemplatablePluginInterface;
 
 /**
  * Class PluginConstructor.
@@ -151,7 +149,7 @@ class PluginConstructor {
 
     if (!is_array($contexts)) {
       throw new \UnexpectedValueException(t('An array of @type objects must be returned by @method.', [
-        '@type' => '\ctools_context',
+        '@type' => \ctools_context::class,
         '@method' => "$this->object::contexts()",
       ]));
     }
@@ -171,7 +169,7 @@ class PluginConstructor {
    * Generate theme hooks.
    */
   private function generateThemeHooks() {
-    if (isset($this->implements['CTools\Plugins\TemplatablePluginInterface'])) {
+    if (isset($this->implements[TemplatablePluginInterface::class])) {
       $variants = $this->themeVariants();
       // Provide default variant initially.
       $this->info['theme variants'] = ['default' => t('Default')];

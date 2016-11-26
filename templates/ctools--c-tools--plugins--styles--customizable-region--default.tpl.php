@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Default theme variant for Customizable Region style plugin.

@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @file
  * Collect all Panels plugins of "Styles" type.
  */
+
+use CTools\PluginContexts;
 
 /**
  * Implements <MODULE>_<FILENAME>_panels_styles().
@@ -126,14 +129,14 @@ function ctools_api_styles_base_settings_form($settings, $display, $pid, $type, 
  * @param array $conf
  *   Plugin settings.
  *
- * @return \CTools\PluginContexts
+ * @return PluginContexts
  *   An instance of plugin contexts object.
  */
 function ctools_api_styles_display_contexts(\panels_display $display, array $plugin, array $conf) {
   // Ensure that "context" key will be always presented to not see PHP notices.
   $conf += ['context' => []];
 
-  return new \CTools\PluginContexts(
+  return new PluginContexts(
     ctools_context_select(ctools_api_display_contexts($display), $plugin['required context'], $conf['context'])
   );
 }

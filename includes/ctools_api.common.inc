@@ -1,8 +1,12 @@
 <?php
+
 /**
  * @file
  * Auxiliary functionality.
  */
+
+use CTools\PluginContexts;
+use CTools\PluginConstructor;
 
 /**
  * Scan modules for CTools API plugins.
@@ -77,9 +81,9 @@ function ctools_api_get_plugins($plugin_type) {
     $type = ucfirst(ctools_api_to_camel_case($plugin_type));
 
     foreach (ctools_api_search_plugins() as $class => $plugin) {
-      if (isset($plugin->implements[implode('\\', ['CTools', 'Plugins', $type, $type . 'Interface'])])) {
+      if (isset($plugin->implements[sprintf('CTools\Plugins\%s\%1$sInterface', $type)])) {
         try {
-          $plugins[$class] = array_merge((new \CTools\PluginConstructor($class, $plugin->implements, $plugin_type))->getInfo(), [
+          $plugins[$class] = array_merge((new PluginConstructor($class, $plugin->implements, $plugin_type))->getInfo(), [
             'name' => "ctools_api:$class",
             'path' => dirname($plugin->uri),
             'file' => $plugin->filename,
@@ -109,16 +113,16 @@ function ctools_api_get_plugins($plugin_type) {
 /**
  * Extend CTools plugin definition to provide child plugins.
  *
- * @see ctools_plugin_load_includes()
- * @see ctools_plugin_process()
- *
  * @param string $type
- *   Original plugin type (e.g. "access", "styles", "content_types");
+ *   Original plugin type (e.g. "access", "styles", "content_types").
  *
  * @return array
  *   ['children'] - all children plugin definitions;
  *   ['get children'] - callback for return all children;
  *   ['get child'] - callback for return selected child.
+ *
+ * @see ctools_plugin_load_includes()
+ * @see ctools_plugin_process()
  */
 function ctools_api_type_definition_get($type) {
   return [
@@ -134,10 +138,6 @@ function ctools_api_type_definition_get($type) {
 /**
  * Collect all child plugins.
  *
- * @internal
- *
- * @see ctools_get_plugins()
- *
  * @param array $plugin
  *   Plugin definition information.
  * @param string $parent
@@ -145,6 +145,10 @@ function ctools_api_type_definition_get($type) {
  *
  * @return array[]
  *   Style plugin definitions.
+ *
+ * @see ctools_get_plugins()
+ *
+ * @internal
  */
 function ctools_api_type_definition_get_children(array $plugin, $parent) {
   foreach ($plugin['children'] as $name => $info) {
@@ -159,8 +163,6 @@ function ctools_api_type_definition_get_children(array $plugin, $parent) {
 /**
  * Chose single plugin from children.
  *
- * @internal
- *
  * @param array $plugin
  *   Plugin definition information.
  * @param string $parent
@@ -170,6 +172,8 @@ function ctools_api_type_definition_get_children(array $plugin, $parent) {
  *
  * @return array
  *   Style plugin definition.
+ *
+ * @internal
  */
 function ctools_api_type_definition_get_child(array $plugin, $parent, $child) {
   return $plugin['children'][$child];
@@ -204,14 +208,14 @@ function ctools_api_to_underscore($argument) {
 /**
  * Replace all "_" and ":" by "-".
  *
- * @example
- * TestTest:test_test => test-test-test-test
- *
  * @param string $argument
  *   Input string.
  *
  * @return string
  *   Transformed string.
+ *
+ * @example
+ * TestTest:test_test => test-test-test-test
  */
 function ctools_api_to_dashes($argument) {
   return str_replace(['_', ':'], '-', ctools_api_to_underscore($argument));
@@ -386,7 +390,7 @@ function ctools_api_plugin_base_configuration_form(array &$form, array &$form_st
       }
     }
 
-    $plugin['object']::configurationForm($items, $form_state, $form_state['input'], new \CTools\PluginContexts($form_state['contexts']));
+    $plugin['object']::configurationForm($items, $form_state, $form_state['input'], new PluginContexts($form_state['contexts']));
 
     if (!empty($plugin['theme variants'])) {
       $items = array_merge([
@@ -427,8 +431,6 @@ function ctools_api_plugin_base_configuration_form(array &$form, array &$form_st
 /**
  * Process form field types.
  *
- * @internal
- *
  * @param array $items
  *   Form elements implementation.
  * @param array $form_state
@@ -442,6 +444,8 @@ function ctools_api_plugin_base_configuration_form(array &$form, array &$form_st
  *
  * @return array
  *   Processed items.
+ *
+ * @internal
  */
 function ctools_api_plugin_base_configuration_form_process(array $items, array &$form_state, array $conf, array $plugin, $add_to_tree = TRUE) {
   foreach ($items as $name => &$element) {
@@ -520,7 +524,14 @@ function ctools_api_plugin_base_configuration_form_process(array $items, array &
     foreach (element_children($element) as $child) {
       // Re-run processing only for elements.
       if (is_array($element[$child])) {
-        $data = call_user_func_array(__FUNCTION__, [[$child => $element[$child]], &$form_state, $conf_child, $plugin, empty($element['#tree'])]);
+        $data = call_user_func_array(__FUNCTION__, [
+          [$child => $element[$child]],
+          &$form_state,
+          $conf_child,
+          $plugin,
+          empty($element['#tree']),
+        ]);
+
         $element[$child] = reset($data);
       }
     }
@@ -532,8 +543,6 @@ function ctools_api_plugin_base_configuration_form_process(array $items, array &
 /**
  * AJAX requests handler.
  *
- * @internal
- *
  * @param array $form
  *   Form elements implementation.
  * @param array $form_state
@@ -541,6 +550,8 @@ function ctools_api_plugin_base_configuration_form_process(array $items, array &
  *
  * @return array
  *   AJAX commands.
+ *
+ * @internal
  */
 function ctools_api_plugin_base_configuration_form_ajax(array $form, array &$form_state) {
   ctools_include('modal');
@@ -552,7 +563,7 @@ function ctools_api_plugin_base_configuration_form_ajax(array $form, array &$for
     $form,
     $form_state,
     $form_state['values'],
-    new \CTools\PluginContexts($form_state['contexts']),
+    new PluginContexts($form_state['contexts']),
     $commands,
     $form_state['triggering_element']
   );
@@ -578,7 +589,7 @@ function ctools_api_plugin_base_configuration_form_validate(array $form, array &
   $plugin = ctools_api_form_state_get_plugin($form_state);
 
   if (isset($plugin['object'])) {
-    $plugin['object']::configurationFormValidate($form, $form_state, $form_state['values'], new \CTools\PluginContexts($form_state['contexts']));
+    $plugin['object']::configurationFormValidate($form, $form_state, $form_state['values'], new PluginContexts($form_state['contexts']));
   }
 }
 
@@ -586,6 +597,7 @@ function ctools_api_plugin_base_configuration_form_validate(array $form, array &
  * {@inheritdoc}
  *
  * @see ctools_api_plugin_base_configuration_form()
+ *
  * @internal
  */
 function ctools_api_plugin_base_configuration_form_submit(array $form, array &$form_state) {
@@ -600,7 +612,7 @@ function ctools_api_plugin_base_configuration_form_submit(array $form, array &$f
       }
     }
 
-    $plugin['object']::configurationFormSubmit($form, $form_state, $form_state['conf'], new \CTools\PluginContexts($form_state['contexts']));
+    $plugin['object']::configurationFormSubmit($form, $form_state, $form_state['conf'], new PluginContexts($form_state['contexts']));
 
     // @see ctools_api_form_alter()
     if (!empty($form_state['#nested_required'])) {
@@ -625,14 +637,14 @@ function ctools_api_plugin_base_configuration_form_submit(array $form, array &$f
 /**
  * Apply display default style to newly created region.
  *
- * @internal
- *
- * @see panels_ajax_flexible_edit_add()
- *
  * @param array $form
  *   Form elements implementation.
  * @param array $form_state
  *   Drupal form state.
+ *
+ * @see panels_ajax_flexible_edit_add()
+ *
+ * @internal
  */
 function ctools_api_panels_flexible_add_item_form_submit(array $form, array &$form_state) {
   $panel_settings =& $form_state['display']->panel_settings;
@@ -669,12 +681,12 @@ function ctools_api_display_contexts(\panels_display $display) {
 /**
  * Add an arbitrary path to the $form_state so it can work with form cache.
  *
- * @see ctools_form_include_file()
- *
  * @param array $form_state
  *   A state of form.
  * @param string $file
  *   Path to file ("__FILE__" constant also can be used).
+ *
+ * @see ctools_form_include_file()
  */
 function ctools_api_form_include_file(array &$form_state, $file) {
   $file = str_replace(DRUPAL_ROOT . '/', '', $file);
@@ -687,12 +699,12 @@ function ctools_api_form_include_file(array &$form_state, $file) {
 /**
  * Recursive processing for specific form elements (e.g. "managed_file").
  *
- * @internal
- *
  * @param array $element
  *   Form element.
  * @param array $form_state
  *   Drupal form state.
+ *
+ * @internal
  */
 function ctools_api_plugin_base_configuration_form_process_specific_elements_submit(array $element, array &$form_state) {
   global $user;
@@ -700,7 +712,9 @@ function ctools_api_plugin_base_configuration_form_process_specific_elements_sub
 
   // Process the files.
   if (isset($element['#type'], $element['#name']) && 'managed_file' === $element['#type'] && empty($once[$element['#name']])) {
-    managed_file_element_submit($element, $form_state, ['ctools_api', 'user', $user->uid]);
+    managed_file_element_submit($element, $form_state, [
+      'ctools_api', 'user', $user->uid,
+    ]);
 
     $once[$element['#name']] = TRUE;
   }
@@ -744,15 +758,15 @@ function ctools_api_plugin_base_configuration_form_process_specific_elements_sub
 /**
  * Prefix and suffix to wrap fields.
  *
- * @internal
- *
  * @param string $type
  *   Element type.
  * @param array $element
- *   Element definition
+ *   Element definition.
  *
  * @return string[]
  *   HTML wrapper markup.
+ *
+ * @internal
  */
 function ctools_api_element_prefix($type, array &$element) {
   $title = '';

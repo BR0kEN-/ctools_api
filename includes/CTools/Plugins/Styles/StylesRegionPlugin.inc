@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Base style plugin for region.
- */
 
 namespace CTools\Plugins\Styles;
 

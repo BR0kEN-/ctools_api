@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Base content type plugin.
- */
 
 namespace CTools\Plugins\ContentTypes;
 

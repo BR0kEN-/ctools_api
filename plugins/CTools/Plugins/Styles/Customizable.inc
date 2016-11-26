@@ -1,12 +1,8 @@
 <?php
-/**
- * @file
- * Helper for Customizable Region and Page style plugins.
- */
 
 namespace CTools\Plugins\Styles;
 
-use CTools\Form;
+use CTools\Form\Elements\Collection;
 
 /**
  * Trait Customizable.
@@ -59,7 +55,7 @@ trait Customizable {
       '#empty_option' => t('- None -'),
     ]);
 
-    new Form\Elements\Collection(array_merge($parents, ['attributes']), $form, $form_state, $conf, function () use ($tag_parents_string) {
+    new Collection(array_merge($parents, ['attributes']), $form, $form_state, $conf, function () use ($tag_parents_string) {
       $item = [
         '#states' => [
           'invisible' => [

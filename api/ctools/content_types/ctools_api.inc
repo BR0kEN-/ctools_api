@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @file
  * Collect all CTools plugins of "ContentTypes" type.
  */
+
+use CTools\PluginContexts;
 
 /**
  * Implements <MODULE>_<FILENAME>_ctools_content_types().
@@ -77,7 +80,7 @@ function ctools_api_ctools_api_content_type_render($content_type, array $conf, a
   $block->content = '';
 
   if (!empty($plugin) && class_exists($plugin['object'])) {
-    $plugin['object']::preprocess($conf, $args, new \CTools\PluginContexts($context));
+    $plugin['object']::preprocess($conf, $args, new PluginContexts($context));
 
     $block->content = ctools_api_apply_theme($content_type, $conf, $plugin, [
       'content' => $conf,

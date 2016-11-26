@@ -1,8 +1,11 @@
 <?php
+
 /**
  * @file
  * Collect all CTools plugins of "Access" type.
  */
+
+use CTools\PluginContexts;
 
 /**
  * Implements <MODULE>_<FILENAME>_ctools_access().
@@ -35,7 +38,7 @@ function ctools_api_access(array &$information, array $interfaces) {
  * @see ctools_access_summary()
  */
 function ctools_api_access_base_summary($conf, $context, array $plugin, $callback = 'summary') {
-  return $plugin['object']::$callback((array) $conf, new \CTools\PluginContexts($context));
+  return $plugin['object']::$callback((array) $conf, new PluginContexts($context));
 }
 
 /**
