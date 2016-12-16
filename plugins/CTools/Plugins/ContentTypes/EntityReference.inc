@@ -55,34 +55,36 @@ class EntityReference extends ContentTypesPlugin {
       }
     }
 
-    self::entityReferenceCollection(['references'], $form, $form_state, $conf);
+    static::entityReferenceCollection(['references'], $form, $form_state, $conf);
   }
 
   /**
    * {@inheritdoc}
    */
   public static function configurationFormElementCallback(array &$form, array &$form_state, array &$conf, PluginContexts $contexts, array &$commands, array $element) {
-    // Clean reference value when context changed.
-    if ('context' === reset($element['#parents'])) {
-      foreach (element_children($form['references']) as $child) {
-        unset($form['references'][$child]['reference']['#value']);
-      }
-    }
-
-    // Process only when AJAX occurred on element from "references".
-    if ('references' === reset($element['#parents'])) {
-      // Remove field name from parents to be able obtain full row.
-      $item =& drupal_array_get_nested_value($form, array_slice($element['#parents'], 0, -1));
-
-      if (isset($item['reference'])) {
-        // When type is changed - hide an input with reference to an entity.
-        if ('bundles' !== end($element['#parents'])) {
-          $item['reference']['#access'] = FALSE;
+    switch (reset($element['#parents'])) {
+      // Clean reference value when context changed.
+      case 'context':
+        foreach (element_children($form['references']) as $child) {
+          unset($form['references'][$child]['reference']['#value']);
         }
+        break;
 
-        // When entity type or bundles are changed - remove referenced value.
-        unset($item['reference']['#value']);
-      }
+      // Process only when AJAX occurred on element from "references".
+      case 'references':
+        // Remove field name from parents to be able obtain full row.
+        $item =& drupal_array_get_nested_value($form, array_slice($element['#parents'], 0, -1));
+
+        if (isset($item['reference'])) {
+          // When type is changed - hide an input with reference to an entity.
+          if ('bundles' !== end($element['#parents'])) {
+            $item['reference']['#access'] = FALSE;
+          }
+
+          // When entity type or bundles are changed - remove referenced value.
+          unset($item['reference']['#value']);
+        }
+        break;
     }
   }
 
@@ -97,7 +99,7 @@ class EntityReference extends ContentTypesPlugin {
     self::initFormState($form_state);
 
     new Collection($parents, $form, $form_state, $conf, function ($i, $data) use ($form_state) {
-      return self::referenceItem($form_state, $data);
+      return static::referenceItem($form_state, $data);
     });
   }
 
@@ -112,7 +114,7 @@ class EntityReference extends ContentTypesPlugin {
     self::initFormState($form_state);
 
     $item = ['#tree' => TRUE];
-    $item += self::referenceItem($form_state, drupal_array_get_nested_value($conf, $parents) ?: $conf);
+    $item += static::referenceItem($form_state, drupal_array_get_nested_value($conf, $parents) ?: $conf);
 
     drupal_array_set_nested_value($form, $parents, $item);
   }
