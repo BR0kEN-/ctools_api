@@ -95,7 +95,7 @@ class Collection {
         // Add the "Remove" button to each row.
         $element['#header']['_operations'] = t('Operations');
         $element['#header']['_weight'] = t('Weight');
-        $element['#attributes']['id'] = sprintf('table_%s_%', self::TYPE, $name);
+        $element['#attributes']['id'] = sprintf('table_%s_%s', self::TYPE, implode('_', $parents));
 
         drupal_add_tabledrag($element['#attributes']['id'], 'order', 'sibling', 'panel-weight');
       }
