@@ -145,8 +145,7 @@ class Collection {
       '#operation' => 'add',
       '#limit_validation_errors' => [],
       '#cell' => [
-        // Remove "_weight" column from counting since it is hidden.
-        'colspan' => count($element['#header']) - 1,
+        'colspan' => count($element['#header']),
       ],
     ];
 
@@ -155,6 +154,9 @@ class Collection {
 
     // Attach a tabledrag library.
     drupal_add_tabledrag($element['#attributes']['id'], 'order', 'sibling', $tabledrag);
+    // Override some methods of "Drupal.tableDrag" to fix its wrong behavior.
+    // @todo Create an issue on Drupal.org and put link on it here.
+    drupal_add_js(CTOOLS_API_MODULE_PATH . '/js/overrides/tabledrag.js');
     // Attach a collection, that was generated, to our form.
     drupal_array_set_nested_value($form, $parents, $element);
     // Update form values to able to add new elements to collection.
