@@ -4,11 +4,11 @@ OOP representation for `content_types`, `styles` and `access` types of [CTools](
 
 ## Main features
 
-- Interfaces. You'll never forget to implement something or doing this wrongly.
-- Inheritance. No need explain benefits.
-- Configuration. All forms builds on a one basis.
-- Dependencies. The list of Drupal modules that should be enabled.
-- Templatable. Auto creation of theme hooks and their variants.
+- Interfaces. You will never forget implement something or do it wrongly.
+- Inheritance. No need to explain the benefits.
+- Configuration. All forms builds on a single basis.
+- Dependencies. Plugins could have a list of Drupal modules required for working.
+- Templatable. Auto creation of theme hooks and their variants. Just create `.tpl.php` file.
 - AJAX. Simpler than ever before.
 
 ## Examples
