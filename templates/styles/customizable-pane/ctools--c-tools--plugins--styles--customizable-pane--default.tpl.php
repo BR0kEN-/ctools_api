@@ -4,7 +4,7 @@
  * @file
  * Default theme variant for Customizable Pane style plugin.
  *
- * @see CTools\Plugins\Styles\CustomizablePane
+ * @see \CTools\Plugins\Styles\CustomizablePane
  *
  * @var \stdClass $content
  * @var array $settings

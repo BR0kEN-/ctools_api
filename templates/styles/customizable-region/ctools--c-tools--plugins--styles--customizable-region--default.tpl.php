@@ -4,7 +4,7 @@
  * @file
  * Default theme variant for Customizable Region style plugin.
  *
- * @see CTools\Plugins\Styles\CustomizableRegion
+ * @see \CTools\Plugins\Styles\CustomizableRegion
  *
  * @var array $settings
  * @var string[] $panes

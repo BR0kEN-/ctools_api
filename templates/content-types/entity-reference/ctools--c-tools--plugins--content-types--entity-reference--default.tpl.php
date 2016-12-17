@@ -4,7 +4,7 @@
  * @file
  * Default theme variant for Entity Reference content type plugin.
  *
- * @see CTools\Plugins\ContentTypes\EntityReference
+ * @see \CTools\Plugins\ContentTypes\EntityReference
  *
  * @var array $content
  */
