@@ -38,9 +38,11 @@ class Collection {
   public function __construct(array $parents, array &$form, array &$form_state, array &$conf, callable $process) {
     // Pass button texts to translate interface.
     static::$buttonTexts = array_map('t', static::$buttonTexts);
+
     $name = ctools_api_html_name_from_array($parents);
     // Check that we already have saved values for our collection.
     $values = drupal_array_get_nested_value($conf, $parents);
+    $tabledrag = 'panel-weight';
     $element = [
       '#tree' => TRUE,
       '#type' => 'table',
@@ -95,9 +97,6 @@ class Collection {
         // Add the "Remove" button to each row.
         $element['#header']['_operations'] = t('Operations');
         $element['#header']['_weight'] = t('Weight');
-        $element['#attributes']['id'] = sprintf('table_%s_%s', self::TYPE, implode('_', $parents));
-
-        drupal_add_tabledrag($element['#attributes']['id'], 'order', 'sibling', 'panel-weight');
       }
 
       // Could be "fieldset" or "table".
@@ -127,7 +126,7 @@ class Collection {
         '#default_value' => isset($value['weight']) ? $value['weight'] : 0,
         '#title-display' => 'invisible',
         '#attributes' => [
-          'class' => ['panel-weight'],
+          'class' => [$tabledrag],
         ],
       ];
 
@@ -150,6 +149,11 @@ class Collection {
       ],
     ];
 
+    // Set an ID here to be sure that it will not be changed.
+    $element['#attributes']['id'] = sprintf('table_%s_%s', self::TYPE, implode('_', $parents));
+
+    // Attach a tabledrag library.
+    drupal_add_tabledrag($element['#attributes']['id'], 'order', 'sibling', $tabledrag);
     // Attach a collection, that was generated, to our form.
     drupal_array_set_nested_value($form, $parents, $element);
     // Update form values to able to add new elements to collection.
