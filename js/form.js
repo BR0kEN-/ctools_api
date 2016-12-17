@@ -40,10 +40,10 @@
             }, 100);
           }
         });
+      });
 
-        $('#theming_guide_trigger').bind('click', function () {
-          $themingGuide.dialog('open');
-        });
+      $('#theming_guide_trigger').once().bind('click', function () {
+        $themingGuide.dialog('open');
       });
 
       if (!$('body').hasClass('adminimal-theme')) {

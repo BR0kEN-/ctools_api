@@ -10,8 +10,10 @@
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
-.ui-dialog {
-  z-index: 1002 !important;
+@each $class, $index in (dialog: 9, widget-overlay: 8) {
+  .ui-#{$class} {
+    z-index: 1000 + $index !important;
+  }
 }
 
 body {
