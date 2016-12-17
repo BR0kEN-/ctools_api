@@ -16,7 +16,7 @@
       var $context = $(context);
       var $themingGuide = $('#theming_guide');
 
-      if ($themingGuide.length) {
+      $themingGuide.once(function () {
         $themingGuide.dialog({
           resizable: false,
           autoOpen: false,
@@ -44,7 +44,7 @@
         $('#theming_guide_trigger').bind('click', function () {
           $themingGuide.dialog('open');
         });
-      }
+      });
 
       if (!$('body').hasClass('adminimal-theme')) {
         // Process all [type=checkbox] and [type=radio] fields.
