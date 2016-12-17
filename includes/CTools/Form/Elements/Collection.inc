@@ -124,7 +124,7 @@ class Collection {
       $items['weight'] = [
         '#type' => 'weight',
         '#delta' => 10,
-        '#default_value' => $value['weight'],
+        '#default_value' => isset($value['weight']) ? $value['weight'] : 0,
         '#title-display' => 'invisible',
         '#attributes' => [
           'class' => ['panel-weight'],
