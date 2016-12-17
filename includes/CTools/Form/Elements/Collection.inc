@@ -145,7 +145,8 @@ class Collection {
       '#operation' => 'add',
       '#limit_validation_errors' => [],
       '#cell' => [
-        'colspan' => count($element['#header']),
+        // Remove "_weight" column from counting since it is hidden.
+        'colspan' => count($element['#header']) - 1,
       ],
     ];
 
