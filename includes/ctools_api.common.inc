@@ -237,16 +237,16 @@ function ctools_api_html_name_from_array(array $parents) {
 /**
  * Build theme hook.
  *
- * @param string $plugin_name
- *   Plugin namespace.
+ * @param string $plugin_fqcn
+ *   Fully qualified class name of plugin's object.
  * @param string $variant
  *   Theme variant.
  *
  * @return string
  *   Theme hook name.
  */
-function ctools_api_theme_hook($plugin_name, $variant) {
-  $arguments = array_merge(['ctools'], explode('\\', $plugin_name));
+function ctools_api_theme_hook($plugin_fqcn, $variant) {
+  $arguments = array_merge(['ctools'], explode('\\', $plugin_fqcn));
   $arguments[] = str_replace('-', '_', $variant);
 
   return implode('__', array_map('ctools_api_to_underscore', $arguments));
@@ -393,13 +393,27 @@ function ctools_api_plugin_base_configuration_form(array &$form, array &$form_st
     $plugin['object']::configurationForm($items, $form_state, $form_state['input'], new PluginContexts($form_state['contexts']));
 
     if (!empty($plugin['theme variants'])) {
+      $plugin_ns_parts = explode('\\', $plugin['object']);
+      $plugin_templates = [];
+
+      foreach ($plugin['theme hooks'] as $variant => $hook) {
+        $plugin_templates[ctools_api_to_dashes($hook)] = $plugin['theme variants'][$variant];
+      }
+
       $items = array_merge([
         'theme' => [
           '#ajax' => TRUE,
           '#type' => 'select',
           '#title' => t('Theme variant'),
           '#options' => $plugin['theme variants'],
+          '#attached' => ['library' => [['system', 'ui.dialog']]],
           '#default_value' => $form_state['input']['theme'],
+          '#description' => theme('ctools_api__theming_guide', [
+            'name' => $plugin['title'],
+            'type' => $plugin['plugin type'],
+            'templates' => $plugin_templates,
+            'subdirectory' => ctools_api_to_dashes(end($plugin_ns_parts)),
+          ]),
         ],
       ], $items);
     }

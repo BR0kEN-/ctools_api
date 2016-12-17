@@ -38,6 +38,14 @@ body {
   }
 }
 
+#theming_guide_trigger {
+  color: $link-color;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
 .modal-content {
   width: 100% !important;
   padding: 1em !important;
@@ -53,7 +61,7 @@ body {
   }
 
   a, .pseudo-link {
-    color: #308aca;
+    color: $link-color;
     cursor: pointer;
     text-decoration: none;
     &:hover {
@@ -240,9 +248,11 @@ body {
     }
   }
   .description {
-    color: #999;
-    font-size: 10px;
-    font-style: italic;
+    // Important needed to break styles of "Shiny" theme.
+    color: #999 !important;
+    font-size: 11px !important;
+    font-style: italic !important;
+    font-weight: normal !important;
     margin-top: 5px;
   }
   .dependent-options {

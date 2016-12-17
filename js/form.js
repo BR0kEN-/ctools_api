@@ -6,9 +6,45 @@
 (function ($, moduleName) {
   'use strict';
 
+  var $document = $(document);
+  var documentEvents = $document.data('events');
+  // Make a copy of an array of events if "keydown" type exists.
+  var keydownEvents = 'keydown' in documentEvents ? documentEvents.keydown.slice() : false;
+
   Drupal.behaviors[moduleName] = {
     attach: function (context) {
       var $context = $(context);
+      var $themingGuide = $('#theming_guide');
+
+      if ($themingGuide.length) {
+        $themingGuide.dialog({
+          resizable: false,
+          autoOpen: false,
+          modal: true,
+          width: $themingGuide.data('width'),
+          open: function () {
+            // Remove "keydown" events to not allow closing of CTools modal
+            // window by clicking on "escape" (ctools/js/modal.js).
+            // @see modalEventEscapeCloseHandler()
+            keydownEvents && $document.unbind('keydown');
+          },
+          close: function () {
+            // Restoring previously removed event handlers. Doing this with a
+            // timeout, to not call handlers alongside with this callback (it
+            // will make a sense when closing of theming guide is happened by
+            // clicking on "esc").
+            setTimeout(function () {
+              keydownEvents && $.each(keydownEvents, function () {
+                $document.bind(this.type, this.handler);
+              });
+            }, 100);
+          }
+        });
+
+        $('#theming_guide_trigger').bind('click', function () {
+          $themingGuide.dialog('open');
+        });
+      }
 
       if (!$('body').hasClass('adminimal-theme')) {
         // Process all [type=checkbox] and [type=radio] fields.

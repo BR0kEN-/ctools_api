@@ -5,6 +5,8 @@
  * Chaos Tools Suite API.
  */
 
+use CTools\Plugins\TemplatablePluginInterface;
+
 define('CTOOLS_API_MODULE_PATH', drupal_get_path('module', 'ctools_api'));
 define('CTOOLS_API_MODULE_TITLE', 'CTools API');
 
@@ -43,7 +45,7 @@ function ctools_api_theme(array $existing, $type, $theme, $path) {
   // Collect unique paths of modules to reduce number of directories scanning.
   foreach (ctools_api_search_plugins() as $plugin) {
     // Add new path only if it was not added earlier and plugin templatable.
-    if (!isset($modules[$plugin->module_path]) && isset($plugin->implements['CTools\Plugins\TemplatablePluginInterface'])) {
+    if (!isset($modules[$plugin->module_path]) && isset($plugin->implements[TemplatablePluginInterface::class])) {
       $modules[$plugin->module_path] = $plugin->module_path;
     }
   }
