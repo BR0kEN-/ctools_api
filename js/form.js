@@ -80,7 +80,7 @@
       $context.find('.horizontal-tabs').once(moduleName, function () {
         var $tabs = $('<ul class="clearfix" />');
         var $fieldsets = $(this).children('fieldset');
-        var hash = location.hash.substr(1).split(':');
+        var hash = location.hash.substr(1).split('@');
         var $firstTab = [];
 
         $fieldsets.each(function () {
@@ -94,7 +94,7 @@
             $fieldset.add($tab).addClass('active');
 
             // Store active tab to location hash.
-            location.replace('#horizontal-tab:' + containerId + ':' + $tab.index());
+            location.replace('#horizontal-tab@' + containerId + '@' + $tab.index());
           }));
         });
 
