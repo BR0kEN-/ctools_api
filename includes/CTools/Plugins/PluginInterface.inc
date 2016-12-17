@@ -27,6 +27,8 @@ interface PluginInterface {
    *     - 'top level' => <bool>,
    *   For "access":
    *     - 'description' => <string>,
+   *   For "styles":
+   *     - 'description' => <string>,
    */
   public static function info();
 

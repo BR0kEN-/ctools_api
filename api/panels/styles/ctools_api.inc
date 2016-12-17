@@ -34,6 +34,10 @@ function ctools_api_styles(array &$information, array $interfaces) {
     }
   }
 
+  $information += [
+    'description' => '',
+  ];
+
   // Prevent creation additional theme suggestions.
   // @see panels_theme()
   unset($information['hook theme']);
