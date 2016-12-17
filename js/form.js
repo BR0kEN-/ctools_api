@@ -7,7 +7,7 @@
   'use strict';
 
   var $document = $(document);
-  var documentEvents = $document.data('events');
+  var documentEvents = $document.data('events') || $._data(document, 'events');
   // Make a copy of an array of events if "keydown" type exists.
   var keydownEvents = 'keydown' in documentEvents ? documentEvents.keydown.slice() : false;
 

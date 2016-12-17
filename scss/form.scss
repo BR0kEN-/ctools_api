@@ -10,6 +10,10 @@
   font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
 }
 
+.ui-dialog {
+  z-index: 1002 !important;
+}
+
 body {
   &:not(.adminimal-theme) {
     .modal-content {
