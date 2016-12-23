@@ -25,8 +25,8 @@ class PluginContexts {
   /**
    * PluginContexts constructor.
    *
-   * @param \ctools_context[] $contexts
-   *   An array of contexts.
+   * @param \ctools_context[]|\ctools_context|null $contexts
+   *   An array of contexts, single context or empty value.
    */
   public function __construct($contexts) {
     $this->rawArgument = $contexts;
