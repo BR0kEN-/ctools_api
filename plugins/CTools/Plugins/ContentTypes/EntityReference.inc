@@ -68,7 +68,10 @@ class EntityReference extends ContentTypesPlugin {
       // Clean reference value when context changed.
       case 'context':
         foreach (element_children($form['references']) as $child) {
-          unset($form['references'][$child]['reference']['#value']);
+          if ('_last' !== $child) {
+            // Hide field and remove its value.
+            static::elementVisibility($form['references'][$child]['reference'], TRUE);
+          }
         }
         break;
 
@@ -76,15 +79,20 @@ class EntityReference extends ContentTypesPlugin {
       case 'references':
         // Remove field name from parents to be able obtain full row.
         $item =& drupal_array_get_nested_value($form, array_slice($element['#parents'], 0, -1));
+        $field = end($element['#parents']);
 
-        if (isset($item['reference'])) {
-          // When type is changed - hide an input with reference to an entity.
-          if ('bundles' !== end($element['#parents'])) {
-            $item['reference']['#access'] = FALSE;
+        if ('reference' !== $field) {
+          switch ($field) {
+            // Type was selected - hide the field for selecting item.
+            case 'entity_type':
+              static::elementVisibility($item['reference'], TRUE);
+              break;
+
+            // Bundle was selected - show the field for selecting item.
+            case 'bundles':
+              static::elementVisibility($item['reference'], FALSE);
+              break;
           }
-
-          // When entity type or bundles are changed - remove referenced value.
-          unset($item['reference']['#value']);
         }
         break;
     }
@@ -122,26 +130,6 @@ class EntityReference extends ContentTypesPlugin {
   }
 
   /**
-   * Store entity types and information in form state.
-   *
-   * @param array $form_state
-   *   Drupal form state.
-   */
-  private static function initFormState(array &$form_state) {
-    if (empty($form_state['entity_info'])) {
-      $form_state['entity_info'] = entity_get_info();
-    }
-
-    if (empty($form_state['entity_types'])) {
-      $form_state['entity_types'] = [];
-
-      foreach ($form_state['entity_info'] as $type => $info) {
-        $form_state['entity_types'][$type] = $info['label'];
-      }
-    }
-  }
-
-  /**
    * {@inheritdoc}
    */
   protected static function referenceItem(array $form_state, array $data) {
@@ -159,38 +147,95 @@ class EntityReference extends ContentTypesPlugin {
       '#ajax' => TRUE,
       '#type' => 'select',
       '#title' => t('Bundles'),
-      '#access' => FALSE,
+      '#options' => [],
       '#multiple' => TRUE,
     ];
 
     $item['reference'] = [
       '#type' => 'entityreference',
       '#title' => t('Item'),
-      '#access' => FALSE,
+      '#multiple' => TRUE,
     ];
 
-    if (!empty($data['entity_type'])) {
-      $bundles = [];
-
+    if (!static::elementVisibility($item['bundles'], empty($data['entity_type']))) {
       foreach ($form_state['entity_info'][$data['entity_type']]['bundles'] as $bundle => $info) {
-        $bundles[$bundle] = $info['label'];
+        $item['bundles']['#options'][$bundle] = $info['label'];
       }
-
-      $item['bundles'] = array_merge($item['bundles'], [
-        '#access' => TRUE,
-        '#options' => $bundles,
-      ]);
     }
 
-    if (!empty($data['bundles'])) {
+    if (!static::elementVisibility($item['reference'], empty($data['bundles']))) {
       $item['reference'] = array_merge($item['reference'], [
-        '#access' => TRUE,
         '#era_bundles' => $data['bundles'],
         '#era_entity_type' => $data['entity_type'],
       ]);
     }
 
     return $item;
+  }
+
+  /**
+   * Visually show/hide an element.
+   *
+   * @param array $element
+   *   Element to process.
+   * @param bool $invisible
+   *   Whether element should be visible or not.
+   * @param string $class
+   *   CSS class for hiding the element.
+   *
+   * @return bool
+   *   Whether element should be visible or not.
+   */
+  protected static function elementVisibility(array &$element, $invisible, $class = 'element-invisible') {
+    // Ensure that element contains attributes.
+    $element += ['#attributes' => []];
+    // Ensure that attributes contains CSS classes.
+    $element['#attributes'] += ['class' => []];
+
+    // Ensure that CSS classes - is an array.
+    if (!is_array($element['#attributes']['class'])) {
+      $element['#attributes']['class'] = explode(' ', $element['#attributes']['class']);
+    }
+
+    $class_position = array_search($class, $element['#attributes']['class']);
+
+    if ($invisible) {
+      // Add class if it's not already in list.
+      if (FALSE === $class_position) {
+        $element['#attributes']['class'][] = $class;
+      }
+
+      // Remove value alongside with hiding the element.
+      unset($element['#value']);
+    }
+    else {
+      // Remove class if it's in list.
+      if (FALSE !== $class_position) {
+        unset($element['#attributes']['class'][$class_position]);
+      }
+    }
+
+    return $invisible;
+  }
+
+  /**
+   * Store entity types and information in form state.
+   *
+   * @param array $form_state
+   *   Drupal form state.
+   */
+  private static function initFormState(array &$form_state) {
+    if (empty($form_state['entity_info'])) {
+      $form_state['entity_info'] = entity_get_info();
+    }
+
+    if (empty($form_state['entity_types'])) {
+      $form_state['entity_types'] = [];
+
+      foreach ($form_state['entity_info'] as $type => $info) {
+        $form_state['entity_types'][$type] = $info['label'];
+      }
+    }
   }
 
 }
