@@ -2,9 +2,11 @@ $checkbox-size: 18px;
 $radio-size: 16px;
 
 .form-type-checkbox {
+  height: $checkbox-size;
   line-height: $checkbox-size;
 }
 .form-type-radio {
+  height: $radio-size;
   line-height: $radio-size;
 }
 

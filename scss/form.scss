@@ -105,12 +105,6 @@ body {
     border-spacing: 1px;
     border-collapse: separate;
     background: $border-color;
-    &.collection {
-      .form-text, .form-select {
-        // Collection's row has a "draggable" icon with width in 25px.
-        width: calc(100% - 25px);
-      }
-    }
   }
   thead {
     background: #f1f1f1;
@@ -119,7 +113,7 @@ body {
     background: none;
   }
   td {
-    vertical-align: middle;
+    vertical-align: top;
   }
   input {
     // Important needed to break styles of "Shiny" theme.
