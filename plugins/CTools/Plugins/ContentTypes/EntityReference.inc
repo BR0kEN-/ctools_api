@@ -47,11 +47,13 @@ class EntityReference extends ContentTypesPlugin {
    */
   public static function configurationForm(array &$form, array &$form_state, array &$conf, PluginContexts $contexts) {
     // "0" is any selected context.
-    if ($contexts->has($conf['context'][0])) {
-      $context_info = $contexts->get($conf['context'][0])->info();
+    if (!empty($conf['context'][0])) {
+      if ($contexts->has($conf['context'][0])) {
+        $context_info = $contexts->get($conf['context'][0])->info();
 
-      foreach ($conf['references'] as &$item) {
-        $item['entity_type'] = $context_info->keyword;
+        foreach ($conf['references'] as &$item) {
+          $item['entity_type'] = $context_info->keyword;
+        }
       }
     }
 

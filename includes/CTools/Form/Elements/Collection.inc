@@ -87,7 +87,7 @@ class Collection {
           $items[$td] += ['#access' => TRUE];
 
           // Do not add header if an access was not granted to an element.
-          if (!empty($items[$td]['#access'])) {
+          if ($items[$td]['#access']) {
             $element['#header'][$td] = isset($items[$td]['#title']) ? $items[$td]['#title'] : '';
           }
 
@@ -122,9 +122,7 @@ class Collection {
 
       $items['weight'] = [
         '#type' => 'weight',
-        '#delta' => 10,
         '#default_value' => isset($value['weight']) ? $value['weight'] : 0,
-        '#title-display' => 'invisible',
         '#attributes' => [
           'class' => [$tabledrag],
         ],
