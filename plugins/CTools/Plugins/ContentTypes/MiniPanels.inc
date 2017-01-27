@@ -149,6 +149,8 @@ class MiniPanels extends ContentTypesPlugin {
    *   List of panels.
    */
   protected static function getPanels(array $conf) {
+    $conf += ['panels' => []];
+
     foreach (panels_mini_load_all() as $machine_name => $panel) {
       $conf['panels'] += [$machine_name => []];
       $conf['panels'][$machine_name] = array_merge((array) $panel, $conf['panels'][$machine_name]);
