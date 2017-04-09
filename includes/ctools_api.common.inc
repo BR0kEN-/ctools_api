@@ -7,6 +7,7 @@
 
 use CTools\PluginContexts;
 use CTools\PluginConstructor;
+use CTools\Plugins\PluginInterface;
 
 /**
  * Scan modules for CTools API plugins.
@@ -20,36 +21,11 @@ function ctools_api_search_plugins() {
 
   if (FALSE === $cache || empty($cache->data)) {
     foreach (autoload_paths() as $base => $modules) {
-      foreach ($modules as $path => $module) {
-        foreach (file_scan_directory($path, '/\.inc$/') as $file) {
-          $class = explode('/', trim(str_replace([$path, '.inc'], '', $file->uri), '/'));
+      foreach (autoload_seek_classes($base, PluginInterface::class, TRUE) as $class => $file) {
+        if (!isset($plugins[$class]) && (new \ReflectionClass($class))->isInstantiable()) {
+          $file->implements = class_implements($class);
 
-          // If first part of namespace isn't equal to its base then we
-          // have a deal with PSR-4 standard. Append a base namespace to
-          // have right path.
-          if ($class[0] !== $base) {
-            array_unshift($class, $base);
-          }
-
-          $class = implode('\\', $class);
-
-          if (!isset($plugins[$class]) && class_exists($class)) {
-            $interfaces = class_implements($class);
-
-            if (isset($interfaces['CTools\Plugins\PluginInterface'])) {
-              $reflection = new \ReflectionClass($class);
-
-              if ($reflection->isInstantiable()) {
-                $file->sources = $path;
-                $file->abstract = $reflection->isAbstract();
-                $file->implements = $interfaces;
-                $file->module_name = $module['name'];
-                $file->module_path = $module['path'];
-
-                $plugins[$class] = $file;
-              }
-            }
-          }
+          $plugins[$class] = $file;
         }
       }
     }
@@ -88,7 +64,7 @@ function ctools_api_get_plugins($plugin_type) {
             'path' => dirname($plugin->uri),
             'file' => $plugin->filename,
             'object' => $class,
-            'sources' => $plugin->sources,
+            'sources' => $plugin->path,
             'location' => $plugin->uri,
             'plugin type' => $plugin_type,
             'plugin module' => $plugin->module_name,
@@ -246,7 +222,16 @@ function ctools_api_html_name_from_array(array $parents) {
  *   Theme hook name.
  */
 function ctools_api_theme_hook($plugin_fqcn, $variant) {
-  $arguments = array_merge(['ctools'], explode('\\', $plugin_fqcn));
+  $arguments = explode('\\', $plugin_fqcn);
+
+  // Remove "Drupal\" at the beginning of the namespace.
+  if ('Drupal' === $arguments[0]) {
+    unset($arguments[0]);
+  }
+
+  unset($arguments[array_search('CTools', $arguments)]);
+
+  $arguments = array_merge(['ctools'], $arguments);
   $arguments[] = str_replace('-', '_', $variant);
 
   return implode('__', array_map('ctools_api_to_underscore', $arguments));
