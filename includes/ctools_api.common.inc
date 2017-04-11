@@ -229,7 +229,11 @@ function ctools_api_theme_hook($plugin_fqcn, $variant) {
     unset($arguments[0]);
   }
 
-  unset($arguments[array_search('CTools', $arguments)]);
+  $ctools = array_search('CTools', $arguments);
+
+  if (FALSE !== $ctools) {
+    unset($arguments[$ctools]);
+  }
 
   $arguments = array_merge(['ctools'], $arguments);
   $arguments[] = str_replace('-', '_', $variant);
