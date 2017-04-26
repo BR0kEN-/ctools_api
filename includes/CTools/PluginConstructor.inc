@@ -4,6 +4,7 @@ namespace CTools;
 
 use CTools\Plugins\PluginInterface;
 use CTools\Plugins\TemplatablePluginInterface;
+use CTools\Exception\MissingDependencyException;
 
 /**
  * Class PluginConstructor.
@@ -109,8 +110,9 @@ class PluginConstructor {
 
       if (!empty($disabled)) {
         // @todo Inform user directly about missing dependencies.
-        throw new \RuntimeException(t('The following dependencies of "@title" content type are disabled or does not exists: "@modules".', [
-          '@title' => $this->info['title'],
+        throw new MissingDependencyException(t('The following dependencies of the "@plugin" plugin of "@type" type are disabled or does not exists: "@modules".', [
+          '@type' => $this->type,
+          '@plugin' => $this->info['title'],
           '@modules' => implode('", "', $disabled),
         ]));
       }

@@ -8,6 +8,7 @@
 use CTools\PluginContexts;
 use CTools\PluginConstructor;
 use CTools\Plugins\PluginInterface;
+use CTools\Exception\MissingDependencyException;
 
 /**
  * Scan modules for CTools API plugins.
@@ -70,6 +71,9 @@ function ctools_api_get_plugins($plugin_type) {
             'plugin module' => $plugin->module_name,
             'plugin module path' => $plugin->module_path,
           ]);
+        }
+        catch (MissingDependencyException $e) {
+          watchdog(CTOOLS_API_MODULE_TITLE, $e->getMessage(), [], WATCHDOG_WARNING);
         }
         catch (\Exception $e) {
           watchdog_exception(CTOOLS_API_MODULE_TITLE, $e);
