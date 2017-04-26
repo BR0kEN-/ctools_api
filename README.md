@@ -20,7 +20,7 @@ CTools API provide a set of useful plugins which also could be used as examples.
 - Content types
   - [Entity Reference](plugins/CTools/Plugins/ContentTypes/EntityReference.inc)
   - [Custom Table](plugins/CTools/Plugins/ContentTypes/CustomTable/CustomTable.inc)
-  - [Mini Panes](plugins/CTools/Plugins/ContentTypes/MiniPanels.inc)
+  - [Mini Panels](plugins/CTools/Plugins/ContentTypes/MiniPanels.inc)
 - Styles
   - [Customizable Region](plugins/CTools/Plugins/Styles/CustomizableRegion.inc)
   - [Customizable Pane](plugins/CTools/Plugins/Styles/CustomizablePane.inc)
