@@ -13,21 +13,31 @@ use CTools\Exception\MissingDependencyException;
 /**
  * Scan modules for CTools API plugins.
  *
- * @return \stdClass[]
- *   Plugins that were found.
+ * @return array[]
+ *   An array of arrays with the following keys:
+ *   - provider: name of module, providing the plugin;
+ *   - file: path to file with plugin;
+ *   - implements: an array of interfaces plugin implements.
  */
 function ctools_api_search_plugins() {
   $cache = cache_get(__FUNCTION__);
   $plugins = [];
 
   if (FALSE === $cache || empty($cache->data)) {
-    foreach (autoload_paths() as $base => $modules) {
-      foreach (autoload_seek_classes($base, PluginInterface::class, TRUE) as $class => $file) {
-        if (!isset($plugins[$class]) && (new \ReflectionClass($class))->isInstantiable()) {
-          $file->implements = class_implements($class);
+    $modules = module_list();
 
-          $plugins[$class] = $file;
-        }
+    foreach (autoload() as $namespace => $data) {
+      if (
+        // Class provider enabled.
+        isset($modules[$data['provider']]) &&
+        // Class implements required interface.
+        is_subclass_of($namespace, PluginInterface::class) &&
+        // Class not abstract.
+        (new \ReflectionClass($namespace))->isInstantiable()
+      ) {
+        $plugins[$namespace] = $data + [
+          'implements' => class_implements($namespace),
+        ];
       }
     }
 
@@ -58,18 +68,16 @@ function ctools_api_get_plugins($plugin_type) {
     $type = ucfirst(ctools_api_to_camel_case($plugin_type));
 
     foreach (ctools_api_search_plugins() as $class => $plugin) {
-      if (isset($plugin->implements[sprintf('CTools\Plugins\%s\%1$sInterface', $type)])) {
+      if (isset($plugin['implements'][sprintf('CTools\Plugins\%s\%1$sInterface', $type)])) {
         try {
-          $plugins[$class] = array_merge((new PluginConstructor($class, $plugin->implements, $plugin_type))->getInfo(), [
+          $plugins[$class] = array_merge((new PluginConstructor($class, $plugin['implements'], $plugin_type))->getInfo(), [
             'name' => "ctools_api:$class",
-            'path' => dirname($plugin->uri),
-            'file' => $plugin->filename,
+            'path' => pathinfo($plugin['file'], PATHINFO_DIRNAME),
+            'file' => pathinfo($plugin['file'], PATHINFO_BASENAME),
             'object' => $class,
-            'sources' => $plugin->path,
-            'location' => $plugin->uri,
+            'location' => $plugin['file'],
             'plugin type' => $plugin_type,
-            'plugin module' => $plugin->module_name,
-            'plugin module path' => $plugin->module_path,
+            'plugin module' => $plugin['provider'],
           ]);
         }
         catch (MissingDependencyException $e) {
@@ -426,7 +434,7 @@ function ctools_api_plugin_base_configuration_form(array &$form, array &$form_st
 
       // Attach CSS and/or JS files that located near the "*.inc" file
       // with a content type definition (if exists).
-      $plugin_asset = rtrim($plugin['location'], 'inc') . $extension;
+      $plugin_asset = rtrim($plugin['location'], pathinfo($plugin['location'], PATHINFO_EXTENSION)) . $extension;
 
       if (file_exists($plugin_asset)) {
         $form['#attached'][$extension][] = $plugin_asset;

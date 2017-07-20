@@ -45,8 +45,8 @@ function ctools_api_theme(array $existing, $type, $theme, $path) {
   // Collect unique paths of modules to reduce number of directories scanning.
   foreach (ctools_api_search_plugins() as $plugin) {
     // Add new path only if it was not added earlier and plugin templatable.
-    if (!isset($modules[$plugin->module_path]) && isset($plugin->implements[TemplatablePluginInterface::class])) {
-      $modules[$plugin->module_path] = $plugin->module_path;
+    if (!isset($modules[$plugin['provider']]) && isset($plugin['implements'][TemplatablePluginInterface::class])) {
+      $modules[$plugin['provider']] = drupal_get_path('module', $plugin['provider']);
     }
   }
 
