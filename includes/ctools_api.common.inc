@@ -26,6 +26,13 @@ function ctools_api_search_plugins() {
   if (FALSE === $cache || empty($cache->data)) {
     $modules = module_list();
 
+    if (function_exists('container')) {
+      // Ensure the autoloader for the container will also be taking part
+      // in the loading process. This will allow "is_subclass_of()" to not
+      // fail with fatal errors.
+      container();
+    }
+
     foreach (autoload() as $namespace => $data) {
       if (
         // Class provider enabled.
