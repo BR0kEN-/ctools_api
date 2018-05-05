@@ -9,6 +9,6 @@ autoload[includes][] = CTools
 dependencies[] = image
 dependencies[] = ctools
 dependencies[] = panels
-dependencies[] = autoload
+dependencies[] = autoload (2.x)
 dependencies[] = managed_file
 dependencies[] = table_element
