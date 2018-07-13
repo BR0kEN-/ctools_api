@@ -15,10 +15,11 @@ php:
   - 7.1
 
 env:
-  - DRUPAL_TESTING_MODULE: ctools_api
-  - DRUPAL_DATABASE_NAME: drupal
-  - DRUPAL_DATABASE_USER: travis
-  - PATH: "$HOME/.composer/vendor/bin:$PATH"
+  global:
+    - DRUPAL_TESTING_MODULE: ctools_api
+    - DRUPAL_DATABASE_NAME: drupal
+    - DRUPAL_DATABASE_USER: travis
+    - PATH: "$HOME/.composer/vendor/bin:$PATH"
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
 mysql:
@@ -31,11 +32,11 @@ before_install:
   - cd ../../build/
   - phpenv config-add php/php.ini
   - composer install
+  - env
   - ls -la "$TRAVIS_BUILD_DIR/"
-  - ls -la drupal/sites/all/modules/contrib/
+  - ls -la
   - mv "$TRAVIS_BUILD_DIR/" "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
   - phpenv rehash
-  - env
 
 install:
   - drush si minimal --db-url="mysql://$DRUPAL_DATABASE_USER:@127.0.0.1/$DRUPAL_DATABASE_NAME" -y -v
