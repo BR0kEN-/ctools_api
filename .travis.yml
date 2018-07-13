@@ -27,9 +27,7 @@ mysql:
 
 before_install:
   - env
-  # Go to the directory where everything will happen.
-  - cd ./tests/travis/
-  - ./scripts/before_install.sh
+  - ./tests/travis/scripts/before_install.sh
 
 install:
   - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_DATABASE_NAME" -y -v
