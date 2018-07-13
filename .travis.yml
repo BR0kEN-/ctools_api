@@ -30,6 +30,8 @@ mysql:
 before_install:
   - env
   - ./tests/travis/before_install.sh
+  - sudo a2enmod rewrite actions fastcgi alias
+  - sudo service apache2 restart
 
 install:
   - phpcs "$TRAVIS_BUILD_DIR/" --runtime-set testVersion "$TRAVIS_PHP_VERSION"
