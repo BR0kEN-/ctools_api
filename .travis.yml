@@ -28,33 +28,44 @@ mysql:
 before_install:
   # Go to the directory where everything will happen.
   - cd ./tests/travis
-  # Inject custom PHP configuration.
-  - phpenv config-add php.ini
-  # Install dependencies.
-  - composer install
   # Compute facts.
   - export DRUPAL_TEST_CWD="$(pwd -P)"
-  # Make our packages available globally.
-  - export PATH="$DRUPAL_TEST_CWD/bin:$PATH"
+  # Define simple JSON parser.
+  - |-
+    json_read() {
+      local RESULT=""
+
+      RESULT="$(awk '/'"$1"'/ {print $'"$2"'}' < "$DRUPAL_TEST_CWD/composer.json" | tr -d '"/:,')"
+
+      [ -n "$RESULT" ] && echo "$RESULT" || echo "$3"
+    }
   # Read the name of a directory with Drupal from "composer.json".
-  - export DRUPAL_TEST_SUBDIR="$(awk '/type:drupal-core/ {print $1}' < "$DRUPAL_TEST_CWD/composer.json" | tr -d '"/:')"
+  - export DRUPAL_TEST_BINDIR="$(json_read bin-dir 2 bin)"
+  - export DRUPAL_TEST_COREDIR="$(json_read type:drupal-core 1)"
+  - export DRUPAL_TEST_VENDORDIR="$(json_read vendor-dir 2 vendor)"
+  # Make our packages available globally.
+  - export PATH="$DRUPAL_TEST_CWD/$DRUPAL_TEST_BINDIR:$PATH"
   # Trim out the owner of a project and leave only its name.
   - export DRUPAL_TEST_MODULE_NAME="${TRAVIS_REPO_SLUG#*/}"
   # Use the subdirectory with Drupal as a name of the database (dashes are
   # replaced by underscores).
-  - export DRUPAL_TEST_DATABASE_NAME="${DRUPAL_TEST_SUBDIR//-/_}"
+  - export DRUPAL_TEST_DATABASE_NAME="${DRUPAL_TEST_COREDIR//-/_}"
   # Save origin directory of a build.
   - export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
   # Override the directory of a build.
-  - export TRAVIS_BUILD_DIR="$DRUPAL_TEST_CWD/$DRUPAL_TEST_SUBDIR/$DRUPAL_TEST_PROJECT_LOCATION/$DRUPAL_TEST_MODULE_NAME"
+  - export TRAVIS_BUILD_DIR="$DRUPAL_TEST_CWD/$DRUPAL_TEST_COREDIR/$DRUPAL_TEST_PROJECT_LOCATION/$DRUPAL_TEST_MODULE_NAME"
   # Print modified environment.
   - env
+  # Inject custom PHP configuration.
+  - phpenv config-add php.ini
+  # Install dependencies.
+  - composer install
   # Ensure the directory for project exists.
   - mkdir -p "$TRAVIS_BUILD_DIR"
-  # Relocate the project.
+  # Relocate the project (current directory excluded).
   - rsync -ra --delete --exclude="${DRUPAL_TEST_CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_DIR_OLD/" "$TRAVIS_BUILD_DIR"
   # Discover available coding standards.
-  - phpcs --config-set installed_paths "$(find "$DRUPAL_TEST_CWD/vendor/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
+  - phpcs --config-set installed_paths "$(find "$DRUPAL_TEST_CWD/$DRUPAL_TEST_VENDORDIR/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
   # Enable Apache modules.
   - sudo a2enmod rewrite actions fastcgi alias
   - sudo service apache2 restart
