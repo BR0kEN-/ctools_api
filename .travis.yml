@@ -16,8 +16,8 @@ php:
 
 env:
   global:
-    - DRUPAL_TEST_MODULE_LOCATION: sites/all/modules/contrib
     - DRUPAL_TEST_INSTALL_PROFILE: minimal
+    - DRUPAL_TEST_PROJECT_LOCATION: sites/all/modules/contrib
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
 mysql:
@@ -46,7 +46,7 @@ before_install:
   # Save origin directory of a build.
   - export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
   # Override the directory of a build.
-  - export TRAVIS_BUILD_DIR="$CWD/$DRUPAL_TEST_SUBDIR/$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
+  - export TRAVIS_BUILD_DIR="$CWD/$DRUPAL_TEST_SUBDIR/$DRUPAL_TEST_PROJECT_LOCATION/$DRUPAL_TEST_MODULE_NAME"
   # Print modified environment.
   - env
   # Ensure the directory for project exists.
@@ -58,10 +58,10 @@ before_install:
   # Enable Apache modules.
   - sudo a2enmod rewrite actions fastcgi alias
   - sudo service apache2 restart
-
-install:
   # Go to the directory with Drupal.
   - cd "$TRAVIS_BUILD_DIR"
+
+install:
   # Install the Drupal.
   - drush si "$DRUPAL_TEST_INSTALL_PROFILE" --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
 
