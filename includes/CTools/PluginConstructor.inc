@@ -2,7 +2,6 @@
 
 namespace CTools;
 
-use CTools\Plugins\PluginInterface;
 use CTools\Plugins\TemplatablePluginInterface;
 use CTools\Exception\MissingDependencyException;
 
@@ -22,7 +21,7 @@ class PluginConstructor {
   /**
    * Plugin definition object.
    *
-   * @var PluginInterface
+   * @var \CTools\Plugins\PluginInterface
    */
   private $object = '';
   /**
