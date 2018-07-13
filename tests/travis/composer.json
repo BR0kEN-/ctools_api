@@ -10,6 +10,7 @@
   },
   "require-dev": {
     "drush/drush": "8.*",
+    "drupal/coder": "2.*",
     "phpunit/phpunit": ">=5.7.20 <6",
     "squizlabs/php_codesniffer": "2.*"
   },

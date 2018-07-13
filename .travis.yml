@@ -30,7 +30,7 @@ before_install:
   - cd ./tests/travis/
   - phpenv config-add php/php.ini
   - composer install
-  - mv -r ./!(tests) "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
+  - mv ./!(tests) "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
   - a2enmod rewrite actions fastcgi alias
   - phpenv rehash
   - env
