@@ -18,7 +18,7 @@ env:
   - DRUPAL_TESTING_MODULE: ctools_api
   - DRUPAL_DATABASE_NAME: drupal
   - DRUPAL_DATABASE_USER: travis
-  - PATH="$HOME/.composer/vendor/bin:$PATH"
+  - PATH: "$HOME/.composer/vendor/bin:$PATH"
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
 mysql:
@@ -31,6 +31,8 @@ before_install:
   - cd ../../build/
   - phpenv config-add php/php.ini
   - composer install
+  - ls -la "$TRAVIS_BUILD_DIR/"
+  - ls -la drupal/sites/all/modules/contrib/
   - mv "$TRAVIS_BUILD_DIR/" "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
   - phpenv rehash
   - env
