@@ -52,7 +52,7 @@ before_install:
   # Ensure the directory for project exists.
   - mkdir -p "$TRAVIS_BUILD_DIR"
   # Relocate the project.
-  - rsync -ra --delete --exclude="${CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_DIR_OLD" "$TRAVIS_BUILD_DIR"
+  - rsync -ra --delete --exclude="${CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_DIR_OLD/" "$TRAVIS_BUILD_DIR"
   # Discover available coding standards.
   - phpcs --config-set installed_paths "$(find "$CWD/vendor/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
   # Enable Apache modules.
