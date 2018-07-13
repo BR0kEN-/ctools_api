@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
-  backupGlobals="false"
-  backupStaticAttributes="false"
-  convertErrorsToExceptions="true"
-  convertNoticesToExceptions="true"
   convertWarningsToExceptions="true"
+  convertNoticesToExceptions="true"
+  convertErrorsToExceptions="true"
+  backupStaticAttributes="false"
   processIsolation="false"
   stopOnFailure="false"
+  backupGlobals="false"
   syntaxCheck="false"
+  bootstrap="tests/travis/bootstrap.phpunit.php"
   colors="true"
 >
   <testsuites>

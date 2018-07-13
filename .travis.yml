@@ -16,6 +16,7 @@ php:
 
 env:
   global:
+    # @todo Compute from the "TRAVIS_REPO_SLUG".
     - DRUPAL_TEST_MODULE_NAME: ctools_api
     - DRUPAL_TEST_MODULE_LOCATION: sites/all/modules/contrib
     - DRUPAL_TEST_INSTALL_PROFILE: minimal
@@ -61,10 +62,11 @@ before_install:
 install:
   # Go to the directory with Drupal.
   - cd "$CWD/$DRUPAL_TEST_SUBDIR"
-  # Run PHPCS against the codebase of our project.
-  - phpcs "$TRAVIS_BUILD_DIR" --runtime-set testVersion "$TRAVIS_PHP_VERSION"
   # Install the Drupal.
   - drush si "$DRUPAL_TEST_INSTALL_PROFILE" --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
 
 script:
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
+  # Run PHPCS against the codebase of our project.
+  - phpcs "$TRAVIS_BUILD_DIR" --runtime-set testVersion "$TRAVIS_PHP_VERSION"
+  - phpunit "$TRAVIS_BUILD_DIR" --coverage-text --coverage-clover=coverage.clover
