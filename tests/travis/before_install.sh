@@ -14,7 +14,7 @@ export PATH="$CWD/bin:$PATH"
 # Save the old location.
 export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
 # Override the path to directory with a build.
-export TRAVIS_BUILD_DIR="$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
+export TRAVIS_BUILD_DIR="$CWD/$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
 
 # Ensure the directory exists.
 mkdir -p "$TRAVIS_BUILD_DIR"
@@ -29,11 +29,11 @@ sudo a2enmod rewrite actions fastcgi alias
 sudo service apache2 restart
 
 echo "$TRAVIS_BUILD_DIR"
-ls -la ../../drupal
-ls -la ../../drupal/sites
-ls -la ../../drupal/sites/all
-ls -la ../../drupal/sites/all/modules
-ls -la ../../drupal/sites/all/modules/contrib
+ls -la drupal
+ls -la drupal/sites
+ls -la drupal/sites/all
+ls -la drupal/sites/all/modules
+ls -la drupal/sites/all/modules/contrib
 
 phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
 phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"
