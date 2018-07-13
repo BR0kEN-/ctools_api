@@ -8,7 +8,7 @@
   stopOnFailure="false"
   backupGlobals="false"
   syntaxCheck="false"
-  bootstrap="tests/travis/bootstrap.phpunit.php"
+  bootstrap="phpunit.bootstrap.php"
   colors="true"
 >
   <testsuites>
