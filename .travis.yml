@@ -18,7 +18,6 @@ env:
   global:
     - DRUPAL_TESTING_MODULE: ctools_api
     - DRUPAL_DATABASE_NAME: drupal
-    - DRUPAL_DATABASE_USER: travis
     - PATH: "$HOME/.composer/vendor/bin:$PATH"
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
@@ -28,8 +27,9 @@ mysql:
   encoding: utf8
 
 before_install:
-  - mv ./tests/travis/ ../../build/
-  - cd ../../build/
+  - mv ./tests/travis/ ../build/
+  - cd ../build/
+  - ls -la ../../
   - phpenv config-add php/php.ini
   - composer install
   - env
@@ -42,7 +42,7 @@ before_install:
   - phpenv rehash
 
 install:
-  - drush si minimal --db-url="mysql://$DRUPAL_DATABASE_USER:@127.0.0.1/$DRUPAL_DATABASE_NAME" -y -v
+  - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_DATABASE_NAME" -y -v
   - sudo service apache2 restart
 
 script:
