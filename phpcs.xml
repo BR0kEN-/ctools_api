@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<ruleset name="ctools_api">
-  <description>The coding standard for Drupal module.</description>
+<ruleset name="drupal-project">
+  <description>The coding standards for a Drupal project.</description>
 
-  <exclude-pattern type="relative">README.md</exclude-pattern>
+  <exclude-pattern type="relative">*.md</exclude-pattern>
   <exclude-pattern type="relative">tests</exclude-pattern>
   <exclude-pattern type="relative">css</exclude-pattern>
 

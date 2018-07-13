@@ -3,10 +3,24 @@
 /**
  * @file
  * Bootstrap Drupal to run PHPUnit tests.
+ *
+ * @see phpunit.xml
  */
 
+$paths = [];
+
 // Both environment variables are provided by the ".travis.yml".
-if (!chdir(vsprintf('%s/%s', array_map('getenv', ['DRUPAL_TEST_CWD', 'DRUPAL_TEST_COREDIR'])))) {
+foreach (['DRUPAL_TEST_CWD', 'DRUPAL_TEST_COREDIR'] as $variable) {
+  $path = getenv($variable);
+
+  if (empty($path)) {
+    throw new \RuntimeException(sprintf('The "%s" environment variable either missing or undefined.', $variable));
+  }
+
+  $paths[] = $path;
+}
+
+if (!chdir(vsprintf('%s/%s', $paths))) {
   throw new \RuntimeException('The environment to run PHPUnit is not configured!');
 }
 
