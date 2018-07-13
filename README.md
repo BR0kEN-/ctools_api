@@ -1,4 +1,4 @@
-# CTools API
+# CTools API [![Build Status](https://img.shields.io/travis/BR0kEN-/ctools_api/master.svg?style=flat-square)](https://travis-ci.org/BR0kEN-/ctools_api)
 
 OOP representation for `content_types`, `styles` and `access` types of [CTools](https://www.drupal.org/project/ctools) plugins.
 

@@ -345,6 +345,9 @@ function ctools_api_apply_theme($plugin_name, array $conf, array $plugin, array 
  *   Form elements implementation.
  * @param array $form_state
  *   Drupal form state.
+ *
+ * @throws \Exception
+ *   When Drupal modules weren't fully loaded.
  */
 function ctools_api_plugin_base_configuration_form(array &$form, array &$form_state) {
   $plugin = ctools_api_form_state_get_plugin($form_state);
@@ -389,7 +392,7 @@ function ctools_api_plugin_base_configuration_form(array &$form, array &$form_st
             $item = array_values(array_filter($item));
 
             // If the last row was removed then init an empty.
-            // @see \CTools\Form\Elements\Collection
+            /* @see \CTools\Form\Elements\Collection */
             if (empty($item)) {
               $item = NULL;
             }
@@ -546,6 +549,11 @@ function ctools_api_plugin_base_configuration_form_process(array $items, array &
     foreach (element_children($element) as $child) {
       // Re-run processing only for elements.
       if (is_array($element[$child])) {
+        // Ignore the "call-time pass-by-reference", produced by
+        // the "PHPCompatibility" check.
+        /* @link https://github.com/wimg/PHPCompatibility */
+        /* @see https://www.drupal.org/project/ctools_api/issues/2984571 */
+        // @codingStandardsIgnoreStart
         $data = call_user_func_array(__FUNCTION__, [
           [$child => $element[$child]],
           &$form_state,
@@ -553,6 +561,7 @@ function ctools_api_plugin_base_configuration_form_process(array $items, array &
           $plugin,
           empty($element['#tree']),
         ]);
+        // @codingStandardsIgnoreEnd
 
         $element[$child] = reset($data);
       }
@@ -636,16 +645,16 @@ function ctools_api_plugin_base_configuration_form_submit(array $form, array &$f
 
     $plugin['object']::configurationFormSubmit($form, $form_state, $form_state['conf'], new PluginContexts($form_state['contexts']));
 
-    // @see ctools_api_form_alter()
+    /* @see ctools_api_form_alter() */
     if (!empty($form_state['#nested_required'])) {
       $form_state['values']['settings'] = $form_state['conf'];
     }
   }
 
   // Save display style settings.
-  // @see \panels_renderer_editor::get_style()
+  /* @see \panels_renderer_editor::get_style() */
   // This defaults will be applied when new region will be created.
-  // @see ctools_api_panels_flexible_add_item_form_submit()
+  /* @see ctools_api_panels_flexible_add_item_form_submit() */
   if (isset($form_state['type'], $form_state['renderer']) && 'display' === $form_state['type']) {
     // Configuration MUST be stored in cache, and, when "Update and save" button
     // will be clicked, then all data from cache will transferred to database.
@@ -753,7 +762,7 @@ function ctools_api_plugin_base_configuration_form_process_specific_elements_sub
   }
 
   // Process the collections.
-  // @see \CTools\Plugins\ContentTypes\Form\Elements\Collection
+  /* @see \CTools\Form\Elements\Collection */
   if (isset($element['#subtype'], $element['#id']) && 'collection' === $element['#subtype'] && empty($once[$element['#id']])) {
     $items =& drupal_array_get_nested_value($form_state['values'], $element['#parents']);
 
@@ -773,7 +782,9 @@ function ctools_api_plugin_base_configuration_form_process_specific_elements_sub
   // Recursively call this function for sure that all field
   // will be saved correctly.
   foreach (element_children($element) as $child) {
+    // @codingStandardsIgnoreStart
     call_user_func_array(__FUNCTION__, [$element[$child], &$form_state]);
+    // @codingStandardsIgnoreEnd
   }
 }
 

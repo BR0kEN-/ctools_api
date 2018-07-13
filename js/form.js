@@ -25,7 +25,7 @@
           open: function () {
             // Remove "keydown" events to not allow closing of CTools modal
             // window by clicking on "escape" (ctools/js/modal.js).
-            // @see modalEventEscapeCloseHandler()
+            /** @see modalEventEscapeCloseHandler() */
             keydownEvents && $document.unbind('keydown');
           },
           close: function () {
