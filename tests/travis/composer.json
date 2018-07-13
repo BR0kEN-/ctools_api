@@ -10,7 +10,8 @@
   },
   "require-dev": {
     "drush/drush": "8.*",
-    "phpunit/phpunit": ">=5.7.20 <6"
+    "phpunit/phpunit": ">=5.7.20 <6",
+    "squizlabs/php_codesniffer": "2.*"
   },
   "conflict": {
     "drupal/core": "8.*"
