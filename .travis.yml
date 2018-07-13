@@ -38,7 +38,7 @@ before_install:
   # Ensure the directory exists.
   - mkdir -p "$TRAVIS_BUILD_DIR/"
   # Copy the module.
-  - mv ./!(tests) "$TRAVIS_BUILD_DIR/"
+  - cp -r ./!(tests) "$TRAVIS_BUILD_DIR/"
   # Discover available coding standards.
   - phpcs --config-set installed_paths "$(find vendor/ -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
   - a2enmod rewrite actions fastcgi alias
