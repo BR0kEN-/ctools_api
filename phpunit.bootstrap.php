@@ -6,7 +6,7 @@
  */
 
 // Both environment variables are provided by the ".travis.yml".
-if (!chdir(vsprintf('%s/%s', array_map('getenv', ['DRUPAL_TEST_CWD', 'DRUPAL_TEST_SUBDIR'])))) {
+if (!chdir(vsprintf('%s/%s', array_map('getenv', ['DRUPAL_TEST_CWD', 'DRUPAL_TEST_COREDIR'])))) {
   throw new \RuntimeException('The environment to run PHPUnit is not configured!');
 }
 
