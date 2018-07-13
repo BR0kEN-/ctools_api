@@ -17,9 +17,8 @@ php:
 env:
   global:
     - DRUPAL_TEST_MODULE_NAME: ctools_api
-    # See "composer.json" to understand where the "drupal/" prefix comes from.
-    - DRUPAL_TEST_MODULE_LOCATION: drupal/sites/all/modules/contrib
-    - DRUPAL_TEST_DATABASE_NAME: drupal
+    - DRUPAL_TEST_MODULE_LOCATION: sites/all/modules/contrib
+    - DRUPAL_TEST_INSTALL_PROFILE: minimal
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
 mysql:
@@ -28,7 +27,6 @@ mysql:
   encoding: utf8
 
 before_install:
-  - env
   # Go to the directory where everything will happen.
   - cd ./tests/travis
   # Inject custom PHP configuration.
@@ -37,9 +35,19 @@ before_install:
   - composer install
   # Compute facts.
   - export CWD="$(pwd -P)"
+  # Make our packages available globally.
   - export PATH="$CWD/bin:$PATH"
+  # Read the name of a directory with Drupal from "composer.json".
+  - export DRUPAL_TEST_SUBDIR="$(awk '/type:drupal-core/ {print $1}' < "$CWD/composer.json" | tr -d '"/:')"
+  # Use the subdirectory with Drupal as a name of the database (dashes are
+  # replaced by underscores).
+  - export DRUPAL_TEST_DATABASE_NAME="${DRUPAL_TEST_SUBDIR//-/_}"
+  # Save origin directory of a build.
   - export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
-  - export TRAVIS_BUILD_DIR="$CWD/$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
+  # Override the directory of a build.
+  - export TRAVIS_BUILD_DIR="$CWD/$DRUPAL_TEST_SUBDIR/$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
+  # Print modified environment.
+  - env
   # Ensure the directory for project exists.
   - mkdir -p "$TRAVIS_BUILD_DIR"
   # Relocate the project.
@@ -49,42 +57,14 @@ before_install:
   # Enable Apache modules.
   - sudo a2enmod rewrite actions fastcgi alias
   - sudo service apache2 restart
-#  - |-
-#    cd ./tests/travis
-#
-#    echo "==> Inject custom PHP configuration."
-#    phpenv config-add php/php.ini
-#
-#    echo "==> Install dependencies."
-#    composer install
-#
-#    echo "==> Compute facts."
-#    export CWD="$(pwd -P)"
-#    # Make our packages observable.
-#    export PATH="$CWD/bin:$PATH"
-#    # Save the old location.
-#    export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
-#    # Override the path to directory with a build.
-#    export TRAVIS_BUILD_DIR="$CWD/$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
-#
-#    echo "==> Ensure the directory for project exists."
-#    mkdir -p "$TRAVIS_BUILD_DIR"
-#
-#    echo "==> Relocate the project."
-#    rsync -ra --delete --exclude="${CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_DIR_OLD" "$TRAVIS_BUILD_DIR"
-#
-#    echo "==> Discover available coding standards."
-#    phpcs --config-set installed_paths "$(find "$CWD/vendor/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
-#
-#    echo "==> Configure Apache web-server."
-#    sudo a2enmod rewrite actions fastcgi alias
-#    sudo service apache2 restart
 
 install:
-  - pwd
-  - echo "$TRAVIS_BUILD_DIR"
+  # Go to the directory with Drupal.
+  - cd "$CWD/$DRUPAL_TEST_SUBDIR"
+  # Run PHPCS against the codebase of our project.
   - phpcs "$TRAVIS_BUILD_DIR" --runtime-set testVersion "$TRAVIS_PHP_VERSION"
-  - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
+  # Install the Drupal.
+  - drush si "$DRUPAL_TEST_INSTALL_PROFILE" --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
 
 script:
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
