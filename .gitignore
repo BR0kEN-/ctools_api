@@ -1,9 +1,1 @@
 .*
-
-!.git*
-!.travis.yml
-
-tests/travis/bin/
-tests/travis/drupal/
-tests/travis/vendor/
-tests/travis/composer.lock

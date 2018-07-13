@@ -21,7 +21,7 @@ interface ContentTypesInterface extends TemplatablePluginInterface, Configurable
    *   Values from configuration form.
    * @param array $arguments
    *   Content type arguments.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    */
   public static function preprocess(array &$variables, array &$arguments, PluginContexts $contexts);
