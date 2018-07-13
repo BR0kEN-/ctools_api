@@ -3,6 +3,8 @@
 set -e
 shopt -s extglob
 
+cd "$(dirname "$0")"
+
 # Inject custom PHP configuration.
 phpenv config-add php/php.ini
 # Install dependencies.
@@ -11,7 +13,7 @@ composer install
 # Save the old location.
 export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
 # Update the PATH before the "TRAVIS_BUILD_DIR" gets changed.
-export PATH="$(cd "$(dirname "$0")" && pwd -P)/bin:$PATH"
+export PATH="$(pwd -P)/bin:$PATH"
 # Override the path to directory with a build.
 export TRAVIS_BUILD_DIR="$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
 
