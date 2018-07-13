@@ -33,8 +33,11 @@ before_install:
   - phpenv config-add php/php.ini
   - composer install
   - env
-  - ls -la "$TRAVIS_BUILD_DIR/"
-  - ls -la
+  - ls -la drupal
+  - ls -la drupal/sites
+  - ls -la drupal/sites/all
+  - ls -la drupal/sites/all/modules
+  - ls -la drupal/sites/all/modules/contrib
   - mv "$TRAVIS_BUILD_DIR/" "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
   - phpenv rehash
 
