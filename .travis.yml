@@ -31,7 +31,7 @@ before_install:
   - env
   - |-
     # Go to the directory where this script is located.
-    cd "$(dirname "$0")"
+    cd ./tests/travis
 
     echo "==> Inject custom PHP configuration."
     phpenv config-add php/php.ini
