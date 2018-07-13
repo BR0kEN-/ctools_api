@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-# Fail as early as possible.
-set -e
 # Go to the directory where this script is located.
 cd "$(dirname "$0")"
 
@@ -25,9 +23,17 @@ rsync -ra --delete --exclude="${CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_D
 
 # Discover available coding standards.
 phpcs --config-set installed_paths "$(find "$CWD/vendor/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
-sudo a2enmod rewrite actions fastcgi alias
 phpenv rehash
 
-ls -la "$TRAVIS_BUILD_DIR/"
+sudo a2enmod rewrite actions fastcgi alias
+sudo service apache2 restart
+
+echo "$TRAVIS_BUILD_DIR"
+ls -la drupal
+ls -la drupal/sites
+ls -la drupal/sites/all
+ls -la drupal/sites/all/modules
+ls -la drupal/sites/all/modules/contrib
+
 phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
 phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"

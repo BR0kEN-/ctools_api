@@ -33,7 +33,6 @@ before_install:
 
 install:
   - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
-  - sudo service apache2 restart
 
 script:
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
