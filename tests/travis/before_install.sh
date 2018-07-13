@@ -27,9 +27,6 @@ rsync -ra --delete --exclude="${CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_D
 echo "Discover available coding standards."
 phpcs --config-set installed_paths "$(find "$CWD/vendor/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
 
-echo "Rehash PHP environment."
-phpenv rehash
-
 echo "Configure Apache web-server."
 sudo a2enmod rewrite actions fastcgi alias
 sudo service apache2 restart
