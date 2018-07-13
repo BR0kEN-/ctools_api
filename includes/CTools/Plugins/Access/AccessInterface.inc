@@ -18,7 +18,7 @@ interface AccessInterface extends ConfigurablePluginInterface, ContextualPluginI
    *
    * @param array $conf
    *   Values from configuration form.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    *
    * @return string
@@ -31,7 +31,7 @@ interface AccessInterface extends ConfigurablePluginInterface, ContextualPluginI
    *
    * @param array $conf
    *   Values from configuration form.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    *
    * @return bool

@@ -39,7 +39,7 @@ function ctools_api_styles(array &$information, array $interfaces) {
   ];
 
   // Prevent creation additional theme suggestions.
-  /* @see panels_theme() */
+  // @see panels_theme()
   unset($information['hook theme']);
 }
 
@@ -133,7 +133,7 @@ function ctools_api_styles_base_settings_form($settings, $display, $pid, $type, 
  * @param array $conf
  *   Plugin settings.
  *
- * @return \CTools\PluginContexts
+ * @return PluginContexts
  *   An instance of plugin contexts object.
  */
 function ctools_api_styles_display_contexts(\panels_display $display, array $plugin, array $conf) {

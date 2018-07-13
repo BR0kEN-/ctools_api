@@ -158,7 +158,7 @@ class Collection {
     drupal_array_set_nested_value($conf, $parents, $values);
 
     // @todo Remove this block of code if #2836827 will be committed to core.
-    /* @link https://www.drupal.org/node/2836827 */
+    // @link https://www.drupal.org/node/2836827
     if (variable_get('ctools_api_fix_tabledrag', TRUE)) {
       // Override some methods of "Drupal.tableDrag" to fix its wrong behavior.
       drupal_add_js(CTOOLS_API_MODULE_PATH . '/js/overrides/tabledrag.js');

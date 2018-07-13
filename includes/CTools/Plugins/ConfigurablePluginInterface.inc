@@ -21,7 +21,7 @@ interface ConfigurablePluginInterface extends PluginInterface {
    *   Drupal form state.
    * @param array $conf
    *   Saved configuration values.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    */
   public static function configurationForm(array &$form, array &$form_state, array &$conf, PluginContexts $contexts);
@@ -35,7 +35,7 @@ interface ConfigurablePluginInterface extends PluginInterface {
    *   Drupal form state.
    * @param array $values
    *   Values from the form elements which will be saved.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    */
   public static function configurationFormValidate(array &$form, array &$form_state, array &$values, PluginContexts $contexts);
@@ -49,7 +49,7 @@ interface ConfigurablePluginInterface extends PluginInterface {
    *   Drupal form state.
    * @param array $conf
    *   Saved configuration values.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    */
   public static function configurationFormSubmit(array &$form, array &$form_state, array &$conf, PluginContexts $contexts);
@@ -65,7 +65,7 @@ interface ConfigurablePluginInterface extends PluginInterface {
    *   Drupal form state.
    * @param array $conf
    *   Saved configuration values.
-   * @param \CTools\PluginContexts $contexts
+   * @param PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    * @param array $commands
    *   Collection of AJAX commands.
