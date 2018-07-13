@@ -20,7 +20,7 @@ interface StylesRegionInterface extends StylesInterface {
    *   Values from configuration form.
    * @param array $variables
    *   All available variables (including "display" and "settings").
-   * @param PluginContexts $contexts
+   * @param \CTools\PluginContexts $contexts
    *   Plugin contexts. @see ContextualPluginInterface::contexts()
    */
   public static function preprocess(\panels_display $display, array &$settings, array &$variables, PluginContexts $contexts);

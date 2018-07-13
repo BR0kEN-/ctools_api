@@ -82,7 +82,7 @@ class MiniPanels extends ContentTypesPlugin {
 
       foreach ($operations as $tail => $title) {
         $links[] = [
-          // @see panels_mini_panels_mini_content_type_admin_info()
+          /* @see panels_mini_panels_mini_content_type_admin_info() */
           'href' => "admin/structure/mini-panels/list/$machine_name/edit/$tail",
           'title' => $title,
           'attributes' => ['target' => '_blank'],

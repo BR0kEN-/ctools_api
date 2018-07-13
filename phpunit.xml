@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+  convertWarningsToExceptions="true"
+  convertNoticesToExceptions="true"
+  convertErrorsToExceptions="true"
+  backupStaticAttributes="false"
+  processIsolation="false"
+  stopOnFailure="false"
+  backupGlobals="false"
+  syntaxCheck="false"
+  bootstrap="phpunit.bootstrap.php"
+  colors="true"
+>
+  <testsuites>
+    <testsuite name="ctools_api">
+      <directory suffix=".php">./src/Tests/PhpUnit</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist processUncoveredFilesFromWhitelist="true">
+      <directory suffix=".php">./src</directory>
+      <directory suffix=".inc">./api</directory>
+      <directory suffix=".inc">./includes</directory>
+      <directory suffix=".inc">./plugins</directory>
+      <directory suffix=".php">./templates</directory>
+      <exclude>
+        <directory suffix=".php">./src/Tests</directory>
+      </exclude>
+    </whitelist>
+  </filter>
+</phpunit>

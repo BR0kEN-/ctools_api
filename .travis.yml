@@ -1,0 +1,83 @@
+language: php
+
+addons:
+  apt:
+    packages:
+      - apache2
+      - libapache2-mod-fastcgi
+
+services:
+  - mysql
+
+php:
+  - 5.6
+  - 7.0
+  - 7.1
+
+env:
+  global:
+    - DRUPAL_TEST_INSTALL_PROFILE: minimal
+    - DRUPAL_TEST_PROJECT_LOCATION: sites/all/modules/contrib
+
+# https://docs.travis-ci.com/user/database-setup/#MySQL
+mysql:
+  database: drupal
+  username: travis
+  encoding: utf8
+
+before_install:
+  # Go to the directory where everything will happen.
+  - cd ./tests/travis
+  # Compute facts.
+  - export DRUPAL_TEST_CWD="$(pwd -P)"
+  # Define simple JSON parser.
+  - |-
+    json_read() {
+      local RESULT=""
+
+      RESULT="$(awk '/'"$1"'/ {print $'"$2"'}' < "$DRUPAL_TEST_CWD/composer.json" | tr -d '"/:,')"
+
+      [ -n "$RESULT" ] && echo "$RESULT" || echo "$3"
+    }
+  # Read the name of a directory with Drupal from "composer.json".
+  - export DRUPAL_TEST_VENDORDIR="$(json_read vendor-dir 2 vendor)"
+  - export DRUPAL_TEST_BINDIR="$(json_read bin-dir 2 "$DRUPAL_TEST_VENDORDIR/bin")"
+  - export DRUPAL_TEST_COREDIR="$(json_read type:drupal-core 1)"
+  # Make our packages available globally.
+  - export PATH="$DRUPAL_TEST_CWD/$DRUPAL_TEST_BINDIR:$PATH"
+  # Trim out the owner of a project and leave only its name.
+  - export DRUPAL_TEST_MODULE_NAME="${TRAVIS_REPO_SLUG#*/}"
+  # Use the subdirectory with Drupal as a name of the database (dashes are
+  # replaced by underscores).
+  - export DRUPAL_TEST_DATABASE_NAME="${DRUPAL_TEST_COREDIR//-/_}"
+  # Save origin directory of a build.
+  - export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
+  # Override the directory of a build.
+  - export TRAVIS_BUILD_DIR="$DRUPAL_TEST_CWD/$DRUPAL_TEST_COREDIR/$DRUPAL_TEST_PROJECT_LOCATION/$DRUPAL_TEST_MODULE_NAME"
+  # Print modified environment.
+  - env
+  # Inject custom PHP configuration.
+  - phpenv config-add php.ini
+  # Install dependencies.
+  - composer install
+  # Ensure the directory for project exists.
+  - mkdir -p "$TRAVIS_BUILD_DIR"
+  # Relocate the project (current directory excluded).
+  - rsync -ra --delete --exclude="${DRUPAL_TEST_CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_DIR_OLD/" "$TRAVIS_BUILD_DIR"
+  # Discover available coding standards.
+  - phpcs --config-set installed_paths "$(find "$DRUPAL_TEST_CWD/$DRUPAL_TEST_VENDORDIR/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
+  # Enable Apache modules.
+  - sudo a2enmod rewrite actions fastcgi alias
+  - sudo service apache2 restart
+  # Go to the directory with Drupal.
+  - cd "$TRAVIS_BUILD_DIR"
+
+install:
+  # Install the Drupal.
+  - drush si "$DRUPAL_TEST_INSTALL_PROFILE" --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
+
+script:
+  - drush en "$DRUPAL_TEST_MODULE_NAME" -y
+  # Run PHPCS against the codebase of our project.
+  - phpcs "$TRAVIS_BUILD_DIR" --runtime-set testVersion "$TRAVIS_PHP_VERSION"
+  - phpunit "$TRAVIS_BUILD_DIR" --coverage-text --coverage-clover=coverage.clover
