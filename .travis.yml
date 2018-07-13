@@ -18,7 +18,6 @@ env:
   global:
     - DRUPAL_TESTING_MODULE: ctools_api
     - DRUPAL_DATABASE_NAME: drupal
-    - PATH: "$TRAVIS_BUILD_DIR/tests/travis/bin:$PATH"
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
 mysql:
