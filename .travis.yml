@@ -60,6 +60,7 @@ before_install:
   - sudo service apache2 restart
   # Go to the directory with Drupal.
   - cd "$TRAVIS_BUILD_DIR"
+  - ls -lah ./
 
 install:
   # Install the Drupal.
@@ -69,4 +70,4 @@ script:
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
   # Run PHPCS against the codebase of our project.
   - phpcs ./ --runtime-set testVersion "$TRAVIS_PHP_VERSION"
-  - phpunit ./ -c "$TRAVIS_BUILD_DIR/phpunit.xml" --coverage-text --coverage-clover=coverage.clover
+  - phpunit ./ --coverage-text --coverage-clover=coverage.clover
