@@ -6,7 +6,7 @@
  */
 
 // @todo Read "drupal" from "composer.json" or "DRUPAL_TEST_SUBDIR" variable.
-define('DRUPAL_ROOT', getcwd() . '/drupal');
+define('DRUPAL_ROOT', getcwd() . '/tests/travis/drupal');
 
 var_dump(
   $_ENV,

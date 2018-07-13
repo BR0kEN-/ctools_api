@@ -60,7 +60,6 @@ before_install:
   - sudo service apache2 restart
   # Go to the directory with Drupal.
   - cd "$TRAVIS_BUILD_DIR"
-  - ls -lah ./
 
 install:
   # Install the Drupal.
