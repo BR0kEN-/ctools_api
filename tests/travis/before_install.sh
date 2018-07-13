@@ -27,13 +27,3 @@ phpenv rehash
 
 sudo a2enmod rewrite actions fastcgi alias
 sudo service apache2 restart
-
-echo "$TRAVIS_BUILD_DIR"
-ls -la drupal
-ls -la drupal/sites
-ls -la drupal/sites/all
-ls -la drupal/sites/all/modules
-ls -la drupal/sites/all/modules/contrib
-
-phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
-phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"

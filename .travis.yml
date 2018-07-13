@@ -32,6 +32,8 @@ before_install:
   - ./tests/travis/before_install.sh
 
 install:
+  - phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"
+  - phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
   - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
 
 script:
