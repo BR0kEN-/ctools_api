@@ -27,19 +27,13 @@ mysql:
   encoding: utf8
 
 before_install:
-  - mv ./tests/travis/ ../build/
-  - cd ../build/
-  - ls -la ../../
+  - cd ./tests/travis/
   - phpenv config-add php/php.ini
   - composer install
-  - env
-  - ls -la drupal
-  - ls -la drupal/sites
-  - ls -la drupal/sites/all
-  - ls -la drupal/sites/all/modules
-  - ls -la drupal/sites/all/modules/contrib
-  - mv "$TRAVIS_BUILD_DIR/" "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
+  - cp -r ./!(tests) "drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE/"
+  - a2enmod rewrite actions fastcgi alias
   - phpenv rehash
+  - env
 
 install:
   - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_DATABASE_NAME" -y -v
