@@ -18,15 +18,16 @@ export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
 # Override the path to directory with a build.
 export TRAVIS_BUILD_DIR="$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
 
-# @todo
-echo "$CWD"
-
 # Ensure the directory exists.
 mkdir -p "$TRAVIS_BUILD_DIR"
 # Copy the module.
-rsync -ra --delete --exclude="tests" "$TRAVIS_BUILD_DIR_OLD" "$TRAVIS_BUILD_DIR"
+rsync -ra --delete --exclude="${CWD//$TRAVIS_BUILD_DIR_OLD\//}" "$TRAVIS_BUILD_DIR_OLD" "$TRAVIS_BUILD_DIR"
 
 # Discover available coding standards.
 phpcs --config-set installed_paths "$(find "$CWD/vendor/" -type f -name "ruleset.xml" -exec dirname {} \; | xargs dirname | uniq | paste -sd "," -)"
-a2enmod rewrite actions fastcgi alias
+sudo a2enmod rewrite actions fastcgi alias
 phpenv rehash
+
+ls -la "$TRAVIS_BUILD_DIR/"
+phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
+phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"

@@ -36,7 +36,4 @@ install:
   - sudo service apache2 restart
 
 script:
-  - ls -la "$TRAVIS_BUILD_DIR/"
-  - phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
-  - phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
