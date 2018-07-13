@@ -79,5 +79,5 @@ install:
 script:
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
   # Run PHPCS against the codebase of our project.
-  - phpcs ./ --runtime-set testVersion "$TRAVIS_PHP_VERSION"
-  - phpunit ./ --coverage-text --coverage-clover=coverage.clover
+  - phpcs "$TRAVIS_BUILD_DIR" --runtime-set testVersion "$TRAVIS_PHP_VERSION"
+  - phpunit "$TRAVIS_BUILD_DIR" --coverage-text --coverage-clover=coverage.clover
