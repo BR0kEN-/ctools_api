@@ -8,6 +8,12 @@
 // @todo Read "drupal" from "composer.json" or "DRUPAL_TEST_SUBDIR" variable.
 define('DRUPAL_ROOT', getcwd() . '/drupal');
 
+var_dump(
+  $_ENV,
+  getenv(),
+  getenv('DRUPAL_TEST_SUBDIR')
+);
+
 $_SERVER += [
   // Prevent notices.
   'REMOTE_ADDR' => '127.0.0.1',

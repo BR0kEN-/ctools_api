@@ -69,4 +69,4 @@ script:
   - drush en "$DRUPAL_TEST_MODULE_NAME" -y
   # Run PHPCS against the codebase of our project.
   - phpcs ./ --runtime-set testVersion "$TRAVIS_PHP_VERSION"
-  - phpunit ./ --coverage-text --coverage-clover=coverage.clover
+  - phpunit ./ -c "$TRAVIS_BUILD_DIR/phpunit.xml" --coverage-text --coverage-clover=coverage.clover
