@@ -31,7 +31,7 @@ before_install:
   # Go to the directory where everything will happen.
   - cd ./tests/travis
   # Inject custom PHP configuration.
-  - phpenv config-add php/php.ini
+  - phpenv config-add php.ini
   # Install dependencies.
   - composer install
   # Compute facts.
