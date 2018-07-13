@@ -3,8 +3,6 @@
 set -e
 shopt -s extglob
 
-# Go to the directory where everything will happen.
-cd ./tests/travis/
 # Inject custom PHP configuration.
 phpenv config-add php/php.ini
 # Install dependencies.
