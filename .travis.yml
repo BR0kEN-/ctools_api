@@ -16,8 +16,10 @@ php:
 
 env:
   global:
-    - DRUPAL_TESTING_MODULE: ctools_api
-    - DRUPAL_DATABASE_NAME: drupal
+    - DRUPAL_TEST_MODULE_NAME: ctools_api
+    # See "composer.json" to understand where the "drupal/" prefix comes from.
+    - DRUPAL_TEST_MODULE_LOCATION: drupal/sites/all/modules/contrib
+    - DRUPAL_TEST_DATABASE_NAME: drupal
 
 # https://docs.travis-ci.com/user/database-setup/#MySQL
 mysql:
@@ -27,14 +29,14 @@ mysql:
 
 before_install:
   - env
-  - ./tests/travis/scripts/before_install.sh
+  - ./tests/travis/before_install.sh
 
 install:
-  - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_DATABASE_NAME" -y -v
+  - drush si minimal --db-url="mysql://$USER:@127.0.0.1/$DRUPAL_TEST_DATABASE_NAME" -y -v
   - sudo service apache2 restart
 
 script:
   - ls -la "$TRAVIS_BUILD_DIR/"
   - phpcs "$TRAVIS_BUILD_DIR/" --standard=Drupal
   - phpcs "$TRAVIS_BUILD_DIR/" --standard=PHPCompatibility --runtime-set testVersion "$TRAVIS_PHP_VERSION"
-  - drush en "$DRUPAL_TESTING_MODULE" -y
+  - drush en "$DRUPAL_TESTING_MODULE_NAME" -y

@@ -8,12 +8,12 @@ phpenv config-add php/php.ini
 # Install dependencies.
 composer install
 
-# Update the PATH before the "TRAVIS_BUILD_DIR" changed.
-export PATH="$TRAVIS_BUILD_DIR/tests/travis/bin:$PATH"
 # Save the old location.
 export TRAVIS_BUILD_DIR_OLD="$TRAVIS_BUILD_DIR"
+# Update the PATH before the "TRAVIS_BUILD_DIR" gets changed.
+export PATH="$(cd "$(dirname "$0")" && pwd -P)/bin:$PATH"
 # Override the path to directory with a build.
-export TRAVIS_BUILD_DIR="drupal/sites/all/modules/contrib/$DRUPAL_TESTING_MODULE"
+export TRAVIS_BUILD_DIR="$DRUPAL_TEST_MODULE_LOCATION/$DRUPAL_TEST_MODULE_NAME"
 
 # Ensure the directory exists.
 mkdir -p "$TRAVIS_BUILD_DIR"
