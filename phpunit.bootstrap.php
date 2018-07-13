@@ -5,14 +5,8 @@
  * Bootstrap Drupal to run PHPUnit tests.
  */
 
-// @todo Read "drupal" from "composer.json" or "DRUPAL_TEST_SUBDIR" variable.
-define('DRUPAL_ROOT', getcwd() . '/tests/travis/drupal');
-
-var_dump(
-  $_ENV,
-  getenv(),
-  getenv('DRUPAL_TEST_SUBDIR')
-);
+chdir(getenv('DRUPAL_TEST_CWD') . '/' . getenv('DRUPAL_TEST_SUBDIR'));
+define('DRUPAL_ROOT', getcwd());
 
 $_SERVER += [
   // Prevent notices.
